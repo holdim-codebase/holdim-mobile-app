@@ -17,6 +17,9 @@ import ProfileScreen from './src/screens/profile'
 import DAOScreen from './src/screens/dao'
 import FullProposalScreen from './src/screens/fullProposal'
 import SplashScreen from 'react-native-splash-screen'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import OnboardingScreen from './src/screens/onboarding'
+import LoginScreen from './src/screens/login'
 
 const feedIcon = require('./src/assets/icons/feed.png')
 const feedFocusedIcon = require('./src/assets/icons/feedFocused.png')
@@ -32,6 +35,8 @@ const navTheme = {
     background: '#000000',
   },
 }
+
+const Stack = createNativeStackNavigator()
 
 const Tab = createBottomTabNavigator()
 
@@ -88,7 +93,95 @@ function SearchStackScreen() {
   )
 }
 
+const MainScreen = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={() => ({
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: '#151515',
+          borderTopColor: '#151515',
+        },
+      })}>
+      <Tab.Screen
+        name="HomeStack"
+        component={HomeStackScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({size, focused, color}) => {
+            return (
+              <Image
+                style={{width: size * 0.9, height: size * 0.9}}
+                source={focused ? feedFocusedIcon : feedIcon}
+              />
+            )
+          },
+        }}
+      />
+      <Tab.Screen
+        name="SearchStack"
+        component={SearchStackScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({size, focused, color}) => {
+            return (
+              <Image
+                style={{width: size * 0.9, height: size * 0.9}}
+                source={focused ? searchFocusedIcon : searchIcon}
+              />
+            )
+          },
+        }}
+      />
+      <Tab.Screen
+        name="ProfileStack"
+        component={ProfileStackScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({size, focused, color}) => {
+            return (
+              <Image
+                style={{width: size * 0.9, height: size * 0.9}}
+                source={focused ? profileFocusedIcon : profileIcon}
+              />
+            )
+          },
+        }}
+      />
+    </Tab.Navigator>
+  )
+}
+
 export default function App() {
+  const [isFirstLaunch, setIsFirstLaunch] = React.useState<boolean>(false)
+  const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState<boolean>(false)
+  React.useEffect(() => {
+    AsyncStorage.clear()
+  }, [])
+
+  // check if the application has already been launched
+  React.useEffect(() => {
+    AsyncStorage.getItem('alreadyLaunched').then(value => {
+      if (value == null) {
+        AsyncStorage.setItem('alreadyLaunched', 'true')
+        setIsFirstLaunch(true)
+      } else {
+        setIsFirstLaunch(false)
+      }
+    })
+  }, [])
+
+  // check if user id already exists
+  React.useEffect(() => {
+    AsyncStorage.getItem('User ID').then(value => {
+      if (value == null) {
+        setAlreadyLoggedIn(false)
+      } else {
+        setAlreadyLoggedIn(true)
+      }
+    })
+  }, [])
+
   // show splash screen
   React.useEffect(() => {
     SplashScreen.hide()
@@ -98,60 +191,27 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar barStyle="light-content" />
       <NavigationContainer theme={navTheme}>
-        <Tab.Navigator
-          screenOptions={() => ({
-            headerShown: false,
-            tabBarStyle: {
-              backgroundColor: '#151515',
-              borderTopColor: '#151515',
-            },
-          })}>
-          <Tab.Screen
-            name="HomeStack"
-            component={HomeStackScreen}
-            options={{
-              tabBarShowLabel: false,
-              tabBarIcon: ({size, focused, color}) => {
-                return (
-                  <Image
-                    style={{width: size * 0.9, height: size * 0.9}}
-                    source={focused ? feedFocusedIcon : feedIcon}
-                  />
-                )
-              },
-            }}
-          />
-          <Tab.Screen
-            name="SearchStack"
-            component={SearchStackScreen}
-            options={{
-              tabBarShowLabel: false,
-              tabBarIcon: ({size, focused, color}) => {
-                return (
-                  <Image
-                    style={{width: size * 0.9, height: size * 0.9}}
-                    source={focused ? searchFocusedIcon : searchIcon}
-                  />
-                )
-              },
-            }}
-          />
-          <Tab.Screen
-            name="ProfileStack"
-            component={ProfileStackScreen}
-            options={{
-              tabBarShowLabel: false,
-              tabBarIcon: ({size, focused, color}) => {
-                return (
-                  <Image
-                    style={{width: size * 0.9, height: size * 0.9}}
-                    source={focused ? profileFocusedIcon : profileIcon}
-                  />
-                )
-              },
-            }}
-          />
-        </Tab.Navigator>
+        {isFirstLaunch && (
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen
+              name="OnboardingScreen"
+              component={OnboardingScreen}
+            />
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            <Stack.Screen name="MainScreen" component={MainScreen} />
+          </Stack.Navigator>
+        )}
+        {!isFirstLaunch && !alreadyLoggedIn && (
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            <Stack.Screen name="MainScreen" component={MainScreen} />
+          </Stack.Navigator>
+        )}
+        {!isFirstLaunch && alreadyLoggedIn && (
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen name="MainScreen" component={MainScreen} />
+          </Stack.Navigator>
+        )}
       </NavigationContainer>
     </SafeAreaProvider>
   )
