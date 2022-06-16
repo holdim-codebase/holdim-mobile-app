@@ -1,16 +1,21 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
 
-export const baseEndpoint = 'https://holdim-api-v3ax6dvhgq-ey.a.run.app/v1'
+export const baseEndpoint: string =
+  'https://holdim-api-v3ax6dvhgq-ey.a.run.app/v1'
 
-let headers = {}
+let headers: any = {}
 export const axiosInstance = axios.create({baseURL: baseEndpoint, headers})
 axiosInstance.interceptors.request.use(
   async config => {
-    const userId = await AsyncStorage.getItem('User ID')
+    const user: FirebaseAuthTypes.User | null = auth().currentUser
 
-    if (userId) {
-      if (config.headers) config.headers.Authorization = `User id ${userId}`
+    if (user) {
+      const idTokenResult: FirebaseAuthTypes.IdTokenResult =
+        await user.getIdTokenResult()
+      if (config.headers) {
+        config.headers.Authorization = `User JWT ${idTokenResult.token}`
+      }
     }
 
     return config

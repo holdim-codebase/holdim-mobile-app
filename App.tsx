@@ -1,14 +1,10 @@
 import * as React from 'react'
-import {View, Text, Image, StatusBar} from 'react-native'
-import {
-  NavigationContainer,
-  DefaultTheme,
-  RouteProp,
-  ParamListBase,
-} from '@react-navigation/native'
+import {Image, StatusBar} from 'react-native'
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
+import auth from '@react-native-firebase/auth'
 
 import ProposalScreen from './src/screens/proposal'
 import FeedScreen from './src/screens/feed'
@@ -155,12 +151,14 @@ const MainScreen = () => {
 export default function App() {
   const [isFirstLaunch, setIsFirstLaunch] = React.useState<boolean>(false)
   const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState<boolean>(false)
-  React.useEffect(() => {
-    AsyncStorage.clear()
-  }, [])
 
-  // check if the application has already been launched
+  // CLear data to test login
+  // React.useEffect(() => {
+  //   AsyncStorage.clear()
+  // }, [])
+
   React.useEffect(() => {
+    // check if the application has already been launched
     AsyncStorage.getItem('alreadyLaunched').then(value => {
       if (value == null) {
         AsyncStorage.setItem('alreadyLaunched', 'true')
@@ -169,20 +167,11 @@ export default function App() {
         setIsFirstLaunch(false)
       }
     })
+    // check if user id already exists
+    auth().currentUser ? setAlreadyLoggedIn(true) : setAlreadyLoggedIn(false)
   }, [])
 
-  // check if user id already exists
-  React.useEffect(() => {
-    AsyncStorage.getItem('User ID').then(value => {
-      if (value == null) {
-        setAlreadyLoggedIn(false)
-      } else {
-        setAlreadyLoggedIn(true)
-      }
-    })
-  }, [])
-
-  // show splash screen
+  // hide splash screen
   React.useEffect(() => {
     SplashScreen.hide()
   }, [])

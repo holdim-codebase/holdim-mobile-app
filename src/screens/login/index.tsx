@@ -12,23 +12,22 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context'
 import auth from '@react-native-firebase/auth'
 import styles from './styles'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {axiosInstance} from '../../config'
 
 const LoginScreen = ({navigation}: any) => {
   const [walletAddressInput, onChangeWalletAddressInput] =
     React.useState<string>('')
-  const [incorrectWalletNumber, setIncorrectWalletNumber] =
+  const [incorrectWalletAddress, setIncorrectWalletAddress] =
     React.useState<boolean>(false)
   const [loading, setLoading] = React.useState<boolean>(false)
 
   const validateWalletAddress = () => {
     // TODO add more validation
     if (walletAddressInput.startsWith('0x')) {
-      setIncorrectWalletNumber(false)
+      setIncorrectWalletAddress(false)
       anonymousSignIn()
     } else {
-      setIncorrectWalletNumber(true)
+      setIncorrectWalletAddress(true)
     }
   }
 
@@ -56,8 +55,7 @@ const LoginScreen = ({navigation}: any) => {
 
   const anonymousSignIn = async () => {
     try {
-      const res = await auth().signInAnonymously()
-      await AsyncStorage.setItem('User ID', res.user.uid)
+      await auth().signInAnonymously()
       userRegister()
     } catch (e: any) {
       console.error(e)
@@ -73,18 +71,19 @@ const LoginScreen = ({navigation}: any) => {
         </View>
       ) : (
         <>
-          <View>
-            <Text style={styles.loginTitle}>
-              Start your friendly DAO journey
-            </Text>
-          </View>
           <View style={styles.loginBottom}>
+            <View style={styles.loginTitleWrapper}>
+              <Text style={styles.loginTitle}>
+                Start your friendly DAO journey
+              </Text>
+            </View>
             <Text
               style={[
                 styles.loginDescriptionTitle,
-                incorrectWalletNumber && styles.loginIncorrectWalletAddressText,
+                incorrectWalletAddress &&
+                  styles.loginIncorrectWalletAddressText,
               ]}>
-              {!incorrectWalletNumber
+              {!incorrectWalletAddress
                 ? 'Please enter your wallet address or ENS name below'
                 : 'Wallet address or ENS you entered is not correct'}
             </Text>
@@ -105,7 +104,7 @@ const LoginScreen = ({navigation}: any) => {
             <TextInput
               style={[
                 styles.loginTextInput,
-                incorrectWalletNumber &&
+                incorrectWalletAddress &&
                   styles.loginIncorrectWalletAddressInput,
               ]}
               onChangeText={onChangeWalletAddressInput}

@@ -8,10 +8,15 @@ const styles = StyleSheet.create({
     marginLeft: normalize(16),
     marginRight: normalize(16),
   },
+  loginTitleWrapper: {
+    color: '#8463DF',
+    fontSize: normalize(48),
+    marginBottom: normalize(108),
+    fontWeight: 'bold',
+  },
   loginTitle: {
     color: '#8463DF',
     fontSize: normalize(48),
-    marginTop: normalize(91),
     fontWeight: 'bold',
   },
   loginVerticalLine: {
