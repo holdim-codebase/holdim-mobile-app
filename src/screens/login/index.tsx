@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   StatusBar,
   Text,
@@ -11,45 +10,32 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import auth from '@react-native-firebase/auth'
+
+import {createUser, handleHTTPError} from '../../services/api'
 import styles from './styles'
-import {axiosInstance} from '../../config'
 
 const LoginScreen = ({navigation}: any) => {
   const [walletAddressInput, onChangeWalletAddressInput] =
-    React.useState<string>('')
+    React.useState<string>()
   const [incorrectWalletAddress, setIncorrectWalletAddress] =
     React.useState<boolean>(false)
   const [loading, setLoading] = React.useState<boolean>(false)
 
-  const validateWalletAddress = () => {
-    // TODO add more validation
-    if (walletAddressInput.startsWith('0x')) {
-      setIncorrectWalletAddress(false)
-      anonymousSignIn()
-    } else {
-      setIncorrectWalletAddress(true)
-    }
-  }
-
   const userRegister = async () => {
+    if (!walletAddressInput) {
+      return
+    }
     try {
       setLoading(true)
-      await axiosInstance
-        .post('/user/register', walletAddressInput)
-        .then(() => {
-          setLoading(false)
-          navigation.navigate('MainScreen')
-        })
-    } catch (e: any) {
+      await createUser(walletAddressInput).then(() => {
+        setLoading(false)
+        navigation.navigate('MainScreen')
+      })
+    } catch (error: any) {
       setLoading(false)
-      Alert.alert('Something went wrong', 'Please try again', [
-        {
-          text: 'Ok',
-          onPress: () => {
-            onChangeWalletAddressInput('')
-          },
-        },
-      ])
+      console.log(error.response.status)
+      handleHTTPError()
+      onChangeWalletAddressInput('')
     }
   }
 
@@ -61,6 +47,27 @@ const LoginScreen = ({navigation}: any) => {
       console.error(e)
     }
   }
+
+  // validate wallet address when user write it
+  // TODO do it with mobix when you add it
+  React.useEffect(() => {
+    const regexPunctuation = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
+    const regexSpace = /\s/g
+
+    if (walletAddressInput) {
+      if (
+        !walletAddressInput.startsWith('0x') ||
+        regexPunctuation.test(walletAddressInput) ||
+        regexSpace.test(walletAddressInput) ||
+        walletAddressInput.length < 40 ||
+        walletAddressInput.length > 45
+      ) {
+        setIncorrectWalletAddress(true)
+      } else {
+        setIncorrectWalletAddress(false)
+      }
+    }
+  }, [walletAddressInput])
 
   return (
     <SafeAreaView style={styles.loginWrapper}>
@@ -114,8 +121,18 @@ const LoginScreen = ({navigation}: any) => {
             />
             <View style={styles.loginBtnGoWrapper}>
               <TouchableOpacity
-                style={styles.loginBtnGo}
-                onPress={validateWalletAddress}>
+                style={[
+                  styles.loginBtnGo,
+                  incorrectWalletAddress || walletAddressInput === undefined
+                    ? styles.loginBtnGoDisabled
+                    : null,
+                ]}
+                disabled={
+                  incorrectWalletAddress || walletAddressInput === undefined
+                    ? true
+                    : false
+                }
+                onPress={anonymousSignIn}>
                 <Text style={styles.loginBtnGoTitle}>GO</Text>
               </TouchableOpacity>
             </View>

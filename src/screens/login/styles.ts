@@ -51,6 +51,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  loginBtnGoDisabled: {
+    flex: 1,
+    height: normalize(64),
+    borderRadius: 5,
+    backgroundColor: '#ACACAC80',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   loginBtnGoTitle: {
     fontSize: normalize(20),
     fontWeight: 'bold',
