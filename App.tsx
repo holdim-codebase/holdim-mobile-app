@@ -1,10 +1,12 @@
 import * as React from 'react'
 import {Image, StatusBar} from 'react-native'
+import SplashScreen from 'react-native-splash-screen'
+import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
-import {SafeAreaProvider} from 'react-native-safe-area-context'
 import auth from '@react-native-firebase/auth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import ProposalScreen from './src/screens/proposal'
 import FeedScreen from './src/screens/feed'
@@ -12,8 +14,6 @@ import SearchScreen from './src/screens/search'
 import ProfileScreen from './src/screens/profile'
 import DAOScreen from './src/screens/dao'
 import FullProposalScreen from './src/screens/fullProposal'
-import SplashScreen from 'react-native-splash-screen'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import OnboardingScreen from './src/screens/onboarding'
 import LoginScreen from './src/screens/login'
 
@@ -23,6 +23,8 @@ const profileIcon = require('./src/assets/icons/profile.png')
 const profileFocusedIcon = require('./src/assets/icons/profileFocused.png')
 const searchIcon = require('./src/assets/icons/search.png')
 const searchFocusedIcon = require('./src/assets/icons/searchFocused.png')
+
+const tabIconSizeMultiplier = 0.9
 
 const navTheme = {
   ...DefaultTheme,
@@ -107,7 +109,10 @@ const MainScreen = () => {
           tabBarIcon: ({size, focused, color}) => {
             return (
               <Image
-                style={{width: size * 0.9, height: size * 0.9}}
+                style={{
+                  width: size * tabIconSizeMultiplier,
+                  height: size * tabIconSizeMultiplier,
+                }}
                 source={focused ? feedFocusedIcon : feedIcon}
               />
             )
@@ -122,7 +127,10 @@ const MainScreen = () => {
           tabBarIcon: ({size, focused, color}) => {
             return (
               <Image
-                style={{width: size * 0.9, height: size * 0.9}}
+                style={{
+                  width: size * tabIconSizeMultiplier,
+                  height: size * tabIconSizeMultiplier,
+                }}
                 source={focused ? searchFocusedIcon : searchIcon}
               />
             )
@@ -137,7 +145,10 @@ const MainScreen = () => {
           tabBarIcon: ({size, focused, color}) => {
             return (
               <Image
-                style={{width: size * 0.9, height: size * 0.9}}
+                style={{
+                  width: size * tabIconSizeMultiplier,
+                  height: size * tabIconSizeMultiplier,
+                }}
                 source={focused ? profileFocusedIcon : profileIcon}
               />
             )
@@ -153,9 +164,9 @@ export default function App() {
   const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState<boolean>(false)
 
   // CLear data to test login
-  // React.useEffect(() => {
-  //   AsyncStorage.clear()
-  // }, [])
+  React.useEffect(() => {
+    AsyncStorage.clear()
+  }, [])
 
   React.useEffect(() => {
     // check if the application has already been launched
@@ -167,9 +178,12 @@ export default function App() {
         setIsFirstLaunch(false)
       }
     })
-    // check if user id already exists
-    auth().currentUser ? setAlreadyLoggedIn(true) : setAlreadyLoggedIn(false)
   }, [])
+
+  // check if user id already exists
+  React.useEffect(() => {
+    auth().currentUser ? setAlreadyLoggedIn(true) : setAlreadyLoggedIn(false)
+  }, [auth().currentUser])
 
   // hide splash screen
   React.useEffect(() => {
