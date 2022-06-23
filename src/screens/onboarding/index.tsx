@@ -2,6 +2,7 @@ import * as React from 'react'
 import {
   Dimensions,
   FlatList,
+  ListRenderItemInfo,
   StatusBar,
   Text,
   TouchableOpacity,
@@ -9,12 +10,16 @@ import {
 } from 'react-native'
 import normalize from 'react-native-normalize'
 import {SafeAreaView} from 'react-native-safe-area-context'
+
 import Arrow from '../../assets/images/svg/ArrowBack.svg'
+import {TSlide} from '../../types'
 import styles from './styles'
 
 const {width, height} = Dimensions.get('window')
 
-const slides = [
+const offsetSize: number = 32
+
+const slides: TSlide[] = [
   {
     id: '1',
     title: 'Only one dapp',
@@ -27,10 +32,9 @@ const slides = [
   },
 ]
 
-const Slide = ({item}: any) => {
+const Slide = ({item}: {item: TSlide}) => {
   return (
     <View
-      key={item.key}
       style={{
         width: Dimensions.get('screen').width - normalize(31),
         height,
@@ -44,9 +48,13 @@ const Slide = ({item}: any) => {
   )
 }
 
+// TODO change navigation type
 const OnboardingScreen = ({navigation}: any) => {
-  const [currentSlideIndicator, setCurrentSlideIndicator] = React.useState(0)
+  const [currentSlideIndicator, setCurrentSlideIndicator] =
+    React.useState<number>(0)
+
   const ref = React.useRef<any>()
+
   const Footer = () => {
     return (
       <View style={styles.onboardingBottom}>
@@ -78,6 +86,7 @@ const OnboardingScreen = ({navigation}: any) => {
     )
   }
 
+  // TODO change e type
   const updateCurrentSlideIndex = (e: any) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x
     const currentIndex = Math.round(contentOffsetX / width)
@@ -85,9 +94,9 @@ const OnboardingScreen = ({navigation}: any) => {
   }
 
   const goNextSlide = () => {
-    const nextSlideIndex = currentSlideIndicator + 1
+    const nextSlideIndex: number = currentSlideIndicator + 1
     if (nextSlideIndex != slides.length) {
-      const offset = nextSlideIndex * width - normalize(32)
+      const offset: number = nextSlideIndex * width - normalize(offsetSize)
       ref.current && ref.current.scrollToOffset({offset})
       setCurrentSlideIndicator(nextSlideIndex)
     } else {
@@ -96,9 +105,9 @@ const OnboardingScreen = ({navigation}: any) => {
   }
 
   const goPreviousSlide = () => {
-    const previousSlideIndex = currentSlideIndicator - 1
+    const previousSlideIndex: number = currentSlideIndicator - 1
     if (currentSlideIndicator != 0) {
-      const offset = previousSlideIndex * width - normalize(32)
+      const offset: number = previousSlideIndex * width - normalize(offsetSize)
       ref.current && ref.current.scrollToOffset({offset})
       setCurrentSlideIndicator(previousSlideIndex)
     }
@@ -119,8 +128,10 @@ const OnboardingScreen = ({navigation}: any) => {
         data={slides}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        renderItem={({item}) => <Slide item={item} />}
-        keyExtractor={item => item.id}
+        renderItem={({item}: ListRenderItemInfo<TSlide>) => (
+          <Slide item={item} />
+        )}
+        keyExtractor={(item: TSlide) => item.id}
       />
       <Footer />
     </SafeAreaView>
