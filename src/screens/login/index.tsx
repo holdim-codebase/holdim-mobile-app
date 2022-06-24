@@ -42,7 +42,7 @@ const LoginScreen = ({navigation}: any) => {
   const anonymousSignIn = async () => {
     try {
       await auth().signInAnonymously()
-      userRegister()
+      await userRegister()
     } catch (e: any) {
       console.error(e)
     }
