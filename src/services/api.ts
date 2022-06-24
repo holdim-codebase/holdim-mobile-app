@@ -13,7 +13,7 @@ axiosInstance.interceptors.request.use(
 
     if (user) {
       const idTokenResult: FirebaseAuthTypes.IdTokenResult =
-        await user.getIdTokenResult()
+        await user.getIdTokenResult(true)
       if (config.headers) {
         config.headers.Authorization = `User JWT ${idTokenResult.token}`
       }
