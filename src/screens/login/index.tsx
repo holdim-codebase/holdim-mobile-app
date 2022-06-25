@@ -20,6 +20,7 @@ const LoginScreen = ({navigation}: any) => {
     React.useState<string>()
   const [incorrectWalletAddress, setIncorrectWalletAddress] =
     React.useState<boolean>(false)
+  const [loadingScreen, setLoadingScreen] = React.useState<boolean>(false)
 
   const [register, {loading}] = useMutation(REGISTER_USER, {
     variables: {
@@ -27,9 +28,11 @@ const LoginScreen = ({navigation}: any) => {
     },
     onCompleted: ({data}) => {
       navigation.navigate('MainScreen')
+      setLoadingScreen(loading)
     },
     onError: error => {
       console.log(error)
+      setLoadingScreen(loading)
       handleHTTPError()
       onChangeWalletAddressInput('')
     },
@@ -40,11 +43,14 @@ const LoginScreen = ({navigation}: any) => {
       setIncorrectWalletAddress(true)
       return
     }
+    setLoadingScreen(true)
     try {
       await auth().signInAnonymously()
       await register({variables: {walletAddress: walletAddressInput}})
+      setLoadingScreen(false)
     } catch (e: any) {
       console.error(e)
+      setLoadingScreen(false)
     }
   }
 
@@ -58,7 +64,7 @@ const LoginScreen = ({navigation}: any) => {
   return (
     <SafeAreaView style={styles.loginWrapper}>
       <StatusBar backgroundColor={'#161616'} />
-      {loading ? (
+      {loadingScreen ? (
         <View style={styles.loadingWrapper}>
           <ActivityIndicator size="large" color="#8463DF" />
         </View>
