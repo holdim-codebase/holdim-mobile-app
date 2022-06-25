@@ -10,8 +10,9 @@ import {
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import auth from '@react-native-firebase/auth'
+import {useMutation} from '@apollo/client'
 
-import {createUser, handleHTTPError} from '../../services/api'
+import {handleHTTPError, REGISTER_USER} from '../../services/api'
 import styles from './styles'
 
 const LoginScreen = ({navigation}: any) => {
@@ -19,54 +20,39 @@ const LoginScreen = ({navigation}: any) => {
     React.useState<string>()
   const [incorrectWalletAddress, setIncorrectWalletAddress] =
     React.useState<boolean>(false)
-  const [loading, setLoading] = React.useState<boolean>(false)
 
-  const userRegister = async () => {
+  const [register, {loading}] = useMutation(REGISTER_USER, {
+    variables: {
+      walletAddress: walletAddressInput,
+    },
+    onCompleted: ({data}) => {
+      navigation.navigate('MainScreen')
+    },
+    onError: error => {
+      console.log(error)
+      handleHTTPError()
+      onChangeWalletAddressInput('')
+    },
+  })
+
+  const anonymousSignIn = async () => {
     if (!walletAddressInput) {
+      setIncorrectWalletAddress(true)
       return
     }
     try {
-      setLoading(true)
-      await createUser(walletAddressInput).then(() => {
-        setLoading(false)
-        navigation.navigate('MainScreen')
-      })
-    } catch (error: any) {
-      setLoading(false)
-      console.log(error.response.status)
-      handleHTTPError()
-      onChangeWalletAddressInput('')
-    }
-  }
-
-  const anonymousSignIn = async () => {
-    try {
       await auth().signInAnonymously()
-      await userRegister()
+      await register({variables: {walletAddress: walletAddressInput}})
     } catch (e: any) {
       console.error(e)
     }
   }
 
   // validate wallet address when user write it
-  // TODO do it with mobix when you add it
   React.useEffect(() => {
-    const regexPunctuation = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
-    const regexSpace = /\s/g
-
-    if (walletAddressInput) {
-      if (
-        !walletAddressInput.startsWith('0x') ||
-        regexPunctuation.test(walletAddressInput) ||
-        regexSpace.test(walletAddressInput) ||
-        walletAddressInput.length < 40 ||
-        walletAddressInput.length > 45
-      ) {
-        setIncorrectWalletAddress(true)
-      } else {
-        setIncorrectWalletAddress(false)
-      }
-    }
+    walletAddressInput && walletAddressInput.length > 255
+      ? setIncorrectWalletAddress(true)
+      : setIncorrectWalletAddress(false)
   }, [walletAddressInput])
 
   return (

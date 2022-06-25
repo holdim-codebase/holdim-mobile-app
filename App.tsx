@@ -7,6 +7,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import auth from '@react-native-firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {ApolloProvider} from '@apollo/client'
 
 import ProposalScreen from './src/screens/proposal'
 import FeedScreen from './src/screens/feed'
@@ -16,6 +17,7 @@ import DAOScreen from './src/screens/dao'
 import FullProposalScreen from './src/screens/fullProposal'
 import OnboardingScreen from './src/screens/onboarding'
 import LoginScreen from './src/screens/login'
+import {client} from './src/services/api'
 
 const feedIcon = require('./src/assets/icons/feed.png')
 const feedFocusedIcon = require('./src/assets/icons/feedFocused.png')
@@ -164,9 +166,13 @@ export default function App() {
   const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState<boolean>(false)
 
   // CLear data to test login
-  React.useEffect(() => {
-    AsyncStorage.clear()
-  }, [])
+  // React.useEffect(() => {
+  //   AsyncStorage.clear()
+  //   auth().currentUser &&
+  //     auth()
+  //       .signOut()
+  //       .then(() => console.log('User signed out!'))
+  // }, [])
 
   React.useEffect(() => {
     // check if the application has already been launched
@@ -191,31 +197,33 @@ export default function App() {
   }, [])
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle="light-content" />
-      <NavigationContainer theme={navTheme}>
-        {isFirstLaunch && (
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen
-              name="OnboardingScreen"
-              component={OnboardingScreen}
-            />
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
-            <Stack.Screen name="MainScreen" component={MainScreen} />
-          </Stack.Navigator>
-        )}
-        {!isFirstLaunch && !alreadyLoggedIn && (
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
-            <Stack.Screen name="MainScreen" component={MainScreen} />
-          </Stack.Navigator>
-        )}
-        {!isFirstLaunch && alreadyLoggedIn && (
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="MainScreen" component={MainScreen} />
-          </Stack.Navigator>
-        )}
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <ApolloProvider client={client}>
+      <SafeAreaProvider>
+        <StatusBar barStyle="light-content" />
+        <NavigationContainer theme={navTheme}>
+          {isFirstLaunch && (
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen
+                name="OnboardingScreen"
+                component={OnboardingScreen}
+              />
+              <Stack.Screen name="LoginScreen" component={LoginScreen} />
+              <Stack.Screen name="MainScreen" component={MainScreen} />
+            </Stack.Navigator>
+          )}
+          {!isFirstLaunch && !alreadyLoggedIn && (
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen name="LoginScreen" component={LoginScreen} />
+              <Stack.Screen name="MainScreen" component={MainScreen} />
+            </Stack.Navigator>
+          )}
+          {!isFirstLaunch && alreadyLoggedIn && (
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen name="MainScreen" component={MainScreen} />
+            </Stack.Navigator>
+          )}
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </ApolloProvider>
   )
 }

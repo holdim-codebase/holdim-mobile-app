@@ -1,30 +1,35 @@
-import axios from 'axios'
+import {Alert} from 'react-native'
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
+import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client'
+import {setContext} from '@apollo/client/link/context'
 
 import {baseEndpoint} from '../config'
-import {Alert} from 'react-native'
 
-let headers: any = {}
+const httpLink = createHttpLink({
+  uri: baseEndpoint,
+})
 
-export const axiosInstance = axios.create({baseURL: baseEndpoint, headers})
-axiosInstance.interceptors.request.use(
-  async config => {
-    const user: FirebaseAuthTypes.User | null = auth().currentUser
+const authLink = setContext(async (_, {headers}) => {
+  const user: FirebaseAuthTypes.User | null = auth().currentUser
 
-    if (user) {
-      const idTokenResult: FirebaseAuthTypes.IdTokenResult =
-        await user.getIdTokenResult(true)
-      if (config.headers) {
-        config.headers.Authorization = `User JWT ${idTokenResult.token}`
-      }
+  if (user) {
+    const idTokenResult: FirebaseAuthTypes.IdTokenResult =
+      await user.getIdTokenResult(true)
+    return {
+      headers: {
+        ...headers,
+        Authorization: idTokenResult.token
+          ? `Bearer ${idTokenResult.token}`
+          : '',
+      },
     }
+  }
+})
 
-    return config
-  },
-  error => {
-    return Promise.reject(error)
-  },
-)
+export const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+})
 
 // TODO add more variants for each type of error
 export const handleHTTPError = () => {
@@ -35,7 +40,11 @@ export const handleHTTPError = () => {
   ])
 }
 
-// TODO change type (any)
-export const createUser = (walletAddressInput: string): Promise<any> => {
-  return axiosInstance.post('/user/register', walletAddressInput)
-}
+export const REGISTER_USER = gql`
+  mutation RegisterUser($walletAddress: ID!) {
+    registerUser(walletAddress: $walletAddress) {
+      id
+      walletAddress
+    }
+  }
+`
