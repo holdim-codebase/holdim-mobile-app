@@ -10,11 +10,11 @@ import {
 } from 'react-native'
 import numeral from 'numeral'
 import moment from 'moment'
-import {TProposal, TPool} from '../../types'
-
-import styles from './styles'
 import {useLazyQuery} from '@apollo/client'
+
+import {TProposal, TPool} from '../../types'
 import {GET_POOL, GET_PROPOSALS, handleHTTPError} from '../../services/api'
+import styles from './styles'
 
 export const convertURIForLogo = (logoURI: string) => {
   return logoURI.startsWith('ipfs://')
