@@ -7,43 +7,43 @@ import {TProposal} from '../../types'
 import {convertURIForLogo} from '../feed'
 import styles, {markDownStyles} from './styles'
 
+export const openLinkInAppBrowser = async (url: string) => {
+  try {
+    const isAvailable = await InAppBrowser.isAvailable()
+    if (isAvailable) {
+      await InAppBrowser.open(url, {
+        // iOS Properties
+        dismissButtonStyle: 'close',
+        preferredBarTintColor: '#161616',
+        preferredControlTintColor: 'white',
+        readerMode: false,
+        animated: true,
+        modalPresentationStyle: 'fullScreen',
+        modalTransitionStyle: 'coverVertical',
+        modalEnabled: true,
+        enableBarCollapsing: false,
+        // Android Properties
+        showTitle: true,
+        toolbarColor: '#161616',
+        secondaryToolbarColor: 'black',
+        navigationBarColor: 'black',
+        navigationBarDividerColor: 'white',
+        enableUrlBarHiding: true,
+        enableDefaultShare: true,
+        forceCloseOnRedirection: false,
+        showInRecent: true,
+        hasBackButton: true,
+      })
+    } else {
+      Linking.openURL(url)
+    }
+  } catch (error: any) {
+    Alert.alert(error.message)
+  }
+}
+
 function FullProposalScreen({route}: any) {
   const [proposal, setProposal] = React.useState<TProposal>()
-
-  const openLinkInAppBrowser = async (url: string) => {
-    try {
-      const isAvailable = await InAppBrowser.isAvailable()
-      if (isAvailable) {
-        await InAppBrowser.open(url, {
-          // iOS Properties
-          dismissButtonStyle: 'close',
-          preferredBarTintColor: '#161616',
-          preferredControlTintColor: 'white',
-          readerMode: false,
-          animated: true,
-          modalPresentationStyle: 'fullScreen',
-          modalTransitionStyle: 'coverVertical',
-          modalEnabled: true,
-          enableBarCollapsing: false,
-          // Android Properties
-          showTitle: true,
-          toolbarColor: '#161616',
-          secondaryToolbarColor: 'black',
-          navigationBarColor: 'black',
-          navigationBarDividerColor: 'white',
-          enableUrlBarHiding: true,
-          enableDefaultShare: true,
-          forceCloseOnRedirection: false,
-          showInRecent: true,
-          hasBackButton: true,
-        })
-      } else {
-        Linking.openURL(url)
-      }
-    } catch (error: any) {
-      Alert.alert(error.message)
-    }
-  }
 
   const markdownRenderRules = {
     link: (node: any, children: any) => {
