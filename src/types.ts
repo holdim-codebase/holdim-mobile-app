@@ -24,3 +24,9 @@ export type TFeedResponse = {
     share: number
   }[]
 }[]
+
+export type TSlide = {
+  id: string
+  title: string
+  subtitle: string
+}

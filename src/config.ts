@@ -1,1 +1,1 @@
-export const baseEndpoint = 'https://tame-quail-27.loca.lt/v1'
+export const baseEndpoint: string = 'https://holdim-api-v3ax6dvhgq-ey.a.run.app'
