@@ -67,6 +67,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: normalize(14),
   },
+  proposalLinkButtonAlone: {
+    width: '100%',
+    backgroundColor: 'rgba(196, 196, 196, 0.5)',
+    flexDirection: 'row',
+    height: normalize(34),
+    borderRadius: normalize(5),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: normalize(14),
+  },
   proposalButtonText: {
     color: 'white',
     fontWeight: '700',

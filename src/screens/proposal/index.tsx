@@ -66,7 +66,12 @@ function ProposalScreen({route, navigation}: any) {
             {proposal.snapshotLink ? (
               <TouchableWithoutFeedback
                 onPress={() => openLinkInAppBrowser(proposal.snapshotLink)}>
-                <View style={styles.proposalLinkButton}>
+                <View
+                  style={
+                    proposal.discussionLink
+                      ? styles.proposalLinkButton
+                      : styles.proposalLinkButtonAlone
+                  }>
                   <Text style={styles.proposalButtonText}>
                     Vote on Snapshot
                   </Text>
@@ -79,7 +84,12 @@ function ProposalScreen({route, navigation}: any) {
             {proposal.discussionLink ? (
               <TouchableWithoutFeedback
                 onPress={() => openLinkInAppBrowser(proposal.discussionLink)}>
-                <View style={styles.proposalLinkButton}>
+                <View
+                  style={
+                    proposal.snapshotLink
+                      ? styles.proposalLinkButton
+                      : styles.proposalLinkButtonAlone
+                  }>
                   <Text style={styles.proposalButtonText}>Go to forum</Text>
                   <View style={styles.proposalLinkSvg}>
                     <Link />
