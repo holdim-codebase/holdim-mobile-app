@@ -1,12 +1,22 @@
 import {Alert} from 'react-native'
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
-import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client'
+import {
+  ApolloClient,
+  ApolloLink,
+  createHttpLink,
+  gql,
+  InMemoryCache,
+} from '@apollo/client'
 import {setContext} from '@apollo/client/link/context'
 
-import {baseEndpoint} from '../config'
+import {baseEndpoint, snapshotEndpoint} from '../config'
 
-const httpLink = createHttpLink({
+const baseHttpLink = createHttpLink({
   uri: baseEndpoint,
+})
+
+const snapshotHttpLink = createHttpLink({
+  uri: snapshotEndpoint,
 })
 
 const authLink = setContext(async (_, {headers}) => {
@@ -15,6 +25,7 @@ const authLink = setContext(async (_, {headers}) => {
   if (user) {
     const idTokenResult: FirebaseAuthTypes.IdTokenResult =
       await user.getIdTokenResult(true)
+    console.log(idTokenResult.token)
     return {
       headers: {
         ...headers,
@@ -27,7 +38,11 @@ const authLink = setContext(async (_, {headers}) => {
 })
 
 export const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: ApolloLink.split(
+    operation => operation.getContext().clientName === 'splashClient',
+    snapshotHttpLink,
+    authLink.concat(baseHttpLink),
+  ),
   cache: new InMemoryCache(),
 })
 
@@ -45,6 +60,43 @@ export const REGISTER_USER = gql`
     registerUser(walletAddress: $walletAddress) {
       id
       walletAddress
+    }
+  }
+`
+
+export const GET_PROPOSALS = gql`
+  query GetProposals {
+    proposals {
+      id
+      snapshotId
+      title
+      dao {
+        id
+        name
+        logo
+      }
+      juniorDescription
+      middleDescription
+      seniorDescription
+      startAt
+      endAt
+      author
+      snapshotLink
+      discussionLink
+    }
+  }
+`
+
+export const GET_POOL = gql`
+  query GetPool($daoId: String!) {
+    proposals(where: {id: $daoId}) {
+      id
+      scores
+      choices
+      symbol
+      scores_total
+      votes
+      quorum
     }
   }
 `
