@@ -1,60 +1,61 @@
-import { StyleSheet } from "react-native"
+import {StyleSheet} from 'react-native'
+import normalize from 'react-native-normalize'
 
 const styles = StyleSheet.create({
   proposalWrapper: {
     flex: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 15
+    paddingHorizontal: normalize(8),
+    paddingVertical: normalize(15),
   },
   proposalTopSectionWrapper: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16
+    marginBottom: normalize(16),
   },
   proposalIcon: {
-    width: 54,
-    height: 54,
-    borderRadius: 50
+    width: normalize(54),
+    height: normalize(54),
+    borderRadius: normalize(50),
   },
   proposalDaoTitle: {
     fontWeight: '700',
-    fontSize: 20,
-    lineHeight: 24,
+    fontSize: normalize(20),
+    lineHeight: normalize(24),
     color: 'white',
-    marginLeft: 8,
+    marginLeft: normalize(8),
     fontFamily: 'System',
   },
   proposalTitle: {
-    fontWeight: '700',
-    fontSize: 16,
-    lineHeight: 19,
+    fontWeight: '500',
+    fontSize: normalize(16),
+    lineHeight: normalize(19),
     color: 'white',
-    marginBottom: 32,
+    marginBottom: normalize(18),
     fontFamily: 'System',
   },
-  proposalDescr: {
+  proposalDescription: {
     fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: normalize(16),
+    lineHeight: normalize(22),
     color: 'white',
-    marginBottom: 16,
+    marginBottom: normalize(16),
     fontFamily: 'System',
   },
   proposalButton: {
     width: '100%',
     backgroundColor: '#8463DF',
-    height: 34,
-    borderRadius: 5,
+    height: normalize(34),
+    borderRadius: normalize(5),
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 14,
+    marginBottom: normalize(14),
   },
   proposalButtonText: {
     color: 'white',
     fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 14,
+    fontSize: normalize(12),
+    lineHeight: normalize(14),
     fontFamily: 'System',
   },
   proposalMetaWrapper: {
@@ -63,36 +64,36 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderTopColor: '#2F2F2F',
     borderTopWidth: 0.5,
-    paddingVertical: 15
+    paddingVertical: normalize(15),
   },
   proposalMeta: {
     flexDirection: 'row',
-    marginVertical: 2
+    marginVertical: normalize(5),
   },
   proposalMetaTitle: {
     fontWeight: '400',
-    fontSize: 14,
-    lineHeight: 16,
+    fontSize: normalize(14),
+    lineHeight: normalize(16),
     color: '#B4B4B4',
     fontFamily: 'System',
   },
   proposalMetaInfo: {
     fontWeight: '400',
-    fontSize: 14,
-    lineHeight: 16,
+    fontSize: normalize(14),
+    lineHeight: normalize(16),
     color: 'white',
-    marginLeft: 4,
+    marginLeft: normalize(4),
     fontFamily: 'System',
   },
   proposalVotingWrapper: {
     borderColor: '#7D7D7D',
     width: '100%',
-    padding: 15,
-    borderRadius: 12,
+    padding: normalize(15),
+    borderRadius: normalize(12),
     borderWidth: 0.5,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    marginTop: 15
+    marginTop: normalize(15),
   },
   proposalVotingItemWrapper: {
     width: '100%',
@@ -101,34 +102,34 @@ const styles = StyleSheet.create({
   proposalVotingItemTextWrapper: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   proposalVotingItemText: {
     color: 'white',
-    fontSize: 12,
+    fontSize: normalize(12),
     fontWeight: '400',
-    lineHeight: 14,
-    marginBottom: 5,
+    lineHeight: normalize(14),
+    marginBottom: normalize(5),
     fontFamily: 'System',
   },
   proposalVotingItemBackgroundLine: {
     width: '100%',
-    height: 7,
+    height: normalize(7),
     backgroundColor: 'rgba(196, 196, 196, 0.5)',
-    borderRadius: 13,
-    marginBottom: 7,
+    borderRadius: normalize(13),
+    marginBottom: normalize(7),
     position: 'relative',
-    zIndex: 1
+    zIndex: 1,
   },
   proposalVotingItemInnerLine: {
     position: 'absolute',
     top: 0,
     left: 0,
-    height: 7,
-    borderRadius: 13,
-    marginBottom: 7,
+    height: normalize(7),
+    borderRadius: normalize(13),
+    marginBottom: normalize(7),
     zIndex: 2,
-    backgroundColor: 'red'
+    backgroundColor: 'red',
   },
 })
 
