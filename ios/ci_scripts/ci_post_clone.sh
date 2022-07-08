@@ -1,14 +1,13 @@
 #!/bin/sh
 
 # Disable automatic `brew cleanup` 
-# export HOMEBREW_NO_INSTALL_CLEANUP=TRUE
-
+export HOMEBREW_NO_INSTALL_CLEANUP=TRUE
 # Instal CocoaPods from Homebrew
 brew install cocoapods
 # Instal NodeJS from Homebrew
-brew install node@16
+brew install node@14
 # Link NodeJS
-brew link node@16
+brew link node@14
 # Instal yarn from Homebrew
 brew install yarn
 
