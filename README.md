@@ -1,5 +1,5 @@
 # General
-Hodlím app was created using react-native init with a typescript template.
+Hodlim app was created using react-native init with a typescript template.
 
 Classic libraries were used in the app such as moment.js, numeral, axios, react-navigation and further. Didn't use any state management since the app has only 2 request without any need in storage, otherwise it is an overkill imho (btw MobX rocks)
 
