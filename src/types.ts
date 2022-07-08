@@ -17,6 +17,8 @@ export type TProposal = {
   startAt: number
   endAt: number
   author: string
+  snapshotLink: string
+  discussionLink: string
 }
 
 export type TPool = {

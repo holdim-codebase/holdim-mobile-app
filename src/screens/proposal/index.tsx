@@ -11,6 +11,8 @@ import numeral from 'numeral'
 
 import {TPool, TProposal} from '../../types'
 import {convertURIForLogo} from '../feed'
+import {openLinkInAppBrowser} from '../fullProposal'
+import Link from '../../assets/images/svg/Link.svg'
 import styles from './styles'
 
 function ProposalScreen({route, navigation}: any) {
@@ -60,6 +62,42 @@ function ProposalScreen({route, navigation}: any) {
               <Text style={styles.proposalButtonText}>Read full version</Text>
             </View>
           </TouchableWithoutFeedback>
+          <View style={styles.proposalLinksButtonWrapper}>
+            {proposal.snapshotLink ? (
+              <TouchableWithoutFeedback
+                onPress={() => openLinkInAppBrowser(proposal.snapshotLink)}>
+                <View
+                  style={
+                    proposal.discussionLink
+                      ? styles.proposalLinkButton
+                      : styles.proposalLinkButtonAlone
+                  }>
+                  <Text style={styles.proposalButtonText}>
+                    Vote on Snapshot
+                  </Text>
+                  <View style={styles.proposalLinkSvg}>
+                    <Link />
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            ) : null}
+            {proposal.discussionLink ? (
+              <TouchableWithoutFeedback
+                onPress={() => openLinkInAppBrowser(proposal.discussionLink)}>
+                <View
+                  style={
+                    proposal.snapshotLink
+                      ? styles.proposalLinkButton
+                      : styles.proposalLinkButtonAlone
+                  }>
+                  <Text style={styles.proposalButtonText}>Go to forum</Text>
+                  <View style={styles.proposalLinkSvg}>
+                    <Link />
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            ) : null}
+          </View>
           <View style={styles.proposalMetaWrapper}>
             <View style={styles.proposalMeta}>
               <Text style={styles.proposalMetaTitle}>Starts:</Text>

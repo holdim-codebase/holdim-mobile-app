@@ -81,6 +81,8 @@ export const GET_PROPOSALS = gql`
       startAt
       endAt
       author
+      snapshotLink
+      discussionLink
     }
   }
 `
