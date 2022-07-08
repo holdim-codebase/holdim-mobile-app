@@ -1,62 +1,91 @@
-import { StyleSheet } from "react-native"
+import {StyleSheet} from 'react-native'
+import normalize from 'react-native-normalize'
 
 const styles = StyleSheet.create({
+  loadingWrapperFullScreen: {
+    width: '100%',
+    height: '100%',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: '50%',
+    backgroundColor: 'black',
+  },
   proposalWrapper: {
     flex: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 15
+    paddingHorizontal: normalize(8),
+    paddingVertical: normalize(15),
   },
   proposalTopSectionWrapper: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16
+    marginBottom: normalize(16),
   },
   proposalIcon: {
-    width: 54,
-    height: 54,
-    borderRadius: 50
+    width: normalize(54),
+    height: normalize(54),
+    borderRadius: normalize(50),
   },
   proposalDaoTitle: {
     fontWeight: '700',
-    fontSize: 20,
-    lineHeight: 24,
+    fontSize: normalize(20),
+    lineHeight: normalize(24),
     color: 'white',
-    marginLeft: 8,
+    marginLeft: normalize(8),
     fontFamily: 'System',
   },
   proposalTitle: {
-    fontWeight: '700',
-    fontSize: 16,
-    lineHeight: 19,
+    fontWeight: '500',
+    fontSize: normalize(16),
+    lineHeight: normalize(19),
     color: 'white',
     fontFamily: 'System',
-    marginBottom: 32,
-  },
-  proposalDescr: {
-    fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 22,
-    color: 'white',
-    marginBottom: 16,
-    fontFamily: 'System',
+    marginBottom: normalize(18),
   },
   proposalButton: {
     width: '100%',
     backgroundColor: '#8463DF',
-    height: 34,
-    borderRadius: 5,
+    height: normalize(34),
+    borderRadius: normalize(5),
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 14,
+    marginBottom: normalize(14),
   },
   proposalButtonText: {
     color: 'white',
     fontWeight: '700',
-    fontSize: 12,
-    lineHeight: 14,
+    fontSize: normalize(12),
+    lineHeight: normalize(14),
     fontFamily: 'System',
   },
+  proposalWebView: {
+    marginTop: normalize(40),
+  },
+})
+
+export const markDownStyles = StyleSheet.create({
+  body: {
+    color: '#E2E2E2',
+    fontSize: normalize(16),
+    fontWeight: '400',
+    lineHeight: normalize(22),
+    marginBottom: normalize(32),
+    fontFamily: 'System',
+  },
+  text: {
+    fontSize: normalize(16),
+  },
+  heading1: {
+    fontWeight: '700',
+  },
+  heading2: {
+    fontWeight: '700',
+  },
+  heading3: {
+    fontWeight: '700',
+  },
+  bullet_list: {paddingBottom: normalize(16)},
 })
 
 export default styles

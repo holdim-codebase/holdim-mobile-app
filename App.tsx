@@ -44,8 +44,9 @@ const HomeStack = createNativeStackNavigator()
 
 const headerOptions = {
   headerStyle: {
-    backgroundColor: 'rgba(28, 28, 28, 0.9)',
+    backgroundColor: 'rgba(22, 22, 22, 1)',
   },
+  headerTitleAlign: 'center',
   headerTintColor: 'white',
   headerBackTitleVisible: false,
 }
@@ -99,8 +100,8 @@ const MainScreen = () => {
       screenOptions={() => ({
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#151515',
-          borderTopColor: '#151515',
+          backgroundColor: 'rgba(22, 22, 22, 1)',
+          borderTopColor: 'rgba(22, 22, 22, 1)',
         },
       })}>
       <Tab.Screen
@@ -199,7 +200,10 @@ export default function App() {
   return (
     <ApolloProvider client={client}>
       <SafeAreaProvider>
-        <StatusBar barStyle="light-content" />
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="rgba(22, 22, 22, 1)"
+        />
         <NavigationContainer theme={navTheme}>
           {isFirstLaunch && (
             <Stack.Navigator screenOptions={{headerShown: false}}>
