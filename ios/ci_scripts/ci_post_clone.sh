@@ -1,16 +1,21 @@
 #!/bin/sh
 
-export HOMEBREW_NO_INSTALL_CLEANUP=TRUE
-brew install cocoapods
-# have to add node yourself
-brew install node@16
-# link it to the path
-brew link node@16
+# Disable automatic `brew cleanup` 
+# export HOMEBREW_NO_INSTALL_CLEANUP=TRUE
 
+# Instal CocoaPods from Homebrew
+brew install cocoapods
+# Instal NodeJS from Homebrew
+brew install node@16
+# Link NodeJS
+brew link node@16
+# Instal yarn from Homebrew
 brew install yarn
 
-# Install dependencies you manage with CocoaPods.
+# Install NodeJS dependencies
 yarn
+# Install pods
 pod install
+
 # the sed command from RN cant find the file... so we have to run it ourselves
 sed -i -e  $'s/ && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_10_0)//' /Volumes/workspace/repository/ios/Pods/RCT-Folly/folly/portability/Time.h
