@@ -26,6 +26,7 @@ function DAOScreen({route}: any) {
     },
   })
 
+  //TODO change token name to short variant
   return loadingDao ? (
     <View style={styles.loadingWrapperFullScreen}>
       <ActivityIndicator size="large" color="#8463DF" />
@@ -55,7 +56,7 @@ function DAOScreen({route}: any) {
               {numeral(dao.tokens[0].personalizedData.quantity).format(
                 '0[.]00',
               )}{' '}
-              1INCH
+              {dao.tokens[0].name}
             </Text>
           </Text>
         </View>
