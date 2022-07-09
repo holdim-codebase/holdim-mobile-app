@@ -69,6 +69,7 @@ function HomeStackScreen() {
           headerTitle: 'Snapshot voting',
         }}
       />
+      <HomeStack.Screen name="DAO" component={DAOScreen} />
     </HomeStack.Navigator>
   )
 }
@@ -90,6 +91,7 @@ function SearchStackScreen() {
   return (
     <SearchStack.Navigator screenOptions={headerOptions}>
       <SearchStack.Screen name="Search" component={SearchScreen} />
+      <SearchStack.Screen name="DAO" component={DAOScreen} />
     </SearchStack.Navigator>
   )
 }

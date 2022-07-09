@@ -74,6 +74,9 @@ export const GET_PROPOSALS = gql`
         id
         name
         logo
+        personalizedData {
+          followed
+        }
       }
       juniorDescription
       middleDescription
@@ -97,6 +100,32 @@ export const GET_POOL = gql`
       scores_total
       votes
       quorum
+    }
+  }
+`
+
+export const GET_DAO_DETAIL = gql`
+  query GetDAOs($ids: [ID!], $onlyMain: Boolean) {
+    daos(ids: $ids) {
+      id
+      snapshotId
+      name
+      logo
+      overview
+      tokenOverview
+      tokens(onlyMain: $onlyMain) {
+        id
+        name
+        marketCap
+        totalSupply
+        price
+        personalizedData {
+          quantity
+        }
+      }
+      personalizedData {
+        followed
+      }
     }
   }
 `

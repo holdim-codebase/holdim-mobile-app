@@ -10,7 +10,12 @@ export type TProposal = {
   id: string
   snapshotId: string
   title: string
-  dao: {id: string; name: string; logo: string}
+  dao: {
+    id: string
+    name: string
+    logo: string
+    personalizedData: {followed: boolean}
+  }
   juniorDescription: string
   middleDescription: string
   seniorDescription: string
@@ -29,6 +34,28 @@ export type TPool = {
   scores_total: number
   votes: number
   quorum: number
+}
+
+export type TDAO = {
+  id: string
+  snapshotId: string
+  name: string
+  logo: string
+  overview: string
+  tokenOverview: string
+  tokens: [
+    {
+      id: string
+      name: string
+      marketCap: number
+      totalSupply: number
+      price: number
+      personalizedData: {
+        quantity: number
+      }
+    },
+  ]
+  personalizedData: {followed: boolean}
 }
 
 export type TSlide = {
