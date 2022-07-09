@@ -5,15 +5,16 @@ import {
   ScrollView,
   Image,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native'
 import moment from 'moment'
 import numeral from 'numeral'
 
 import {TPool, TProposal} from '../../types'
 import {convertURIForLogo} from '../feed'
-import {openLinkInAppBrowser} from '../fullProposal'
 import Link from '../../assets/images/svg/Link.svg'
 import styles from './styles'
+import {openLinkInAppBrowser} from '../../components/MarkdownText'
 
 function ProposalScreen({route, navigation}: any) {
   const [proposal, setProposal] = React.useState<TProposal>(
@@ -34,6 +35,10 @@ function ProposalScreen({route, navigation}: any) {
     navigation.navigate('FullProposal', {proposal})
   }
 
+  const openDAODescription = (daoId: string, followed: boolean) => {
+    navigation.navigate('DAO', {daoId, followed})
+  }
+
   React.useEffect(() => {
     if (route.params.proposal) {
       setProposal(route.params.proposal)
@@ -45,23 +50,31 @@ function ProposalScreen({route, navigation}: any) {
     <ScrollView style={styles.proposalWrapper}>
       {route.params.proposal ? (
         <View style={styles.proposalWrapper}>
-          <View style={styles.proposalTopSectionWrapper}>
-            <Image
-              style={styles.proposalIcon}
-              source={{uri: convertURIForLogo(proposal.dao.logo)}}
-            />
-            <Text style={styles.proposalDaoTitle}>{proposal.dao.name}</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() =>
+              openDAODescription(
+                proposal.dao.id,
+                proposal.dao.personalizedData.followed,
+              )
+            }>
+            <View style={styles.proposalTopSectionWrapper}>
+              <Image
+                style={styles.proposalIcon}
+                source={{uri: convertURIForLogo(proposal.dao.logo)}}
+              />
+              <Text style={styles.proposalDaoTitle}>{proposal.dao.name}</Text>
+            </View>
+          </TouchableOpacity>
           <Text style={styles.proposalTitle}>{proposal.title}</Text>
           <Text style={styles.proposalDescription}>TL:DR (AI translated)</Text>
           <Text style={styles.proposalDescription}>
             {proposal.middleDescription}
           </Text>
-          <TouchableWithoutFeedback onPress={() => openFullProposal(proposal)}>
+          <TouchableOpacity onPress={() => openFullProposal(proposal)}>
             <View style={styles.proposalButton}>
               <Text style={styles.proposalButtonText}>Read full version</Text>
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
           <View style={styles.proposalLinksButtonWrapper}>
             {proposal.snapshotLink ? (
               <TouchableWithoutFeedback

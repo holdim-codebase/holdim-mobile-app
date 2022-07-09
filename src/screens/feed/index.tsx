@@ -72,6 +72,10 @@ function FeedScreen({navigation}: any) {
     getProposals()
   }
 
+  const openDAODescription = (daoId: string, followed: boolean) => {
+    navigation.navigate('DAO', {daoId, followed})
+  }
+
   React.useEffect(() => {
     if (proposals) {
       const snapshotIds: string[] = []
@@ -103,15 +107,32 @@ function FeedScreen({navigation}: any) {
             <TouchableOpacity key={i} onPress={() => openProposal(item, pool)}>
               <View style={styles.proposalWrapper}>
                 <View style={styles.proposalImageWrapper}>
-                  <Image
-                    source={{
-                      uri: convertURIForLogo(item.dao.logo),
-                    }}
-                    style={styles.proposalImage}
-                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      openDAODescription(
+                        item.dao.id,
+                        item.dao.personalizedData.followed,
+                      )
+                    }>
+                    <Image
+                      source={{
+                        uri: convertURIForLogo(item.dao.logo),
+                      }}
+                      style={styles.proposalImage}
+                    />
+                  </TouchableOpacity>
                 </View>
+
                 <View style={styles.proposalContentWrapper}>
-                  <Text style={styles.proposalTitle}>{item.dao.name}</Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      openDAODescription(
+                        item.dao.id,
+                        item.dao.personalizedData.followed,
+                      )
+                    }>
+                    <Text style={styles.proposalTitle}>{item.dao.name}</Text>
+                  </TouchableOpacity>
                   <Text style={styles.proposalDescription}>
                     {item.juniorDescription}
                   </Text>

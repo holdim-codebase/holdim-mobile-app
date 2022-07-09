@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    marginTop: normalize(15),
+    marginVertical: normalize(15),
   },
   proposalVotingItemWrapper: {
     width: '100%',
