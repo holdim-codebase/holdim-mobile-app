@@ -1,8 +1,23 @@
 # General
-Hodlím app was created using react-native init with a typescript template.
+Hodlim app was created using react-native init with a typescript template.
 
 Classic libraries were used in the app such as moment.js, numeral, axios, react-navigation and further. Didn't use any state management since the app has only 2 request without any need in storage, otherwise it is an overkill imho (btw MobX rocks)
 
+# Install
+
+## MacOS
+```
+npm i
+cd ios
+pod install
+```
+
+### Apple M1 installation
+Before installing pods run
+
+```
+gem install --user-install ffi -- --enable-libffi-alloc
+```
 
 # App details
 The app has 3 navigation stacks: Home, Search and Profile.
