@@ -129,3 +129,22 @@ export const GET_DAO_DETAIL = gql`
     }
   }
 `
+
+export const GET_DAO_LIST = gql`
+  query GetDAOs($ids: [ID!], $onlyMain: Boolean) {
+    daos(ids: $ids) {
+      id
+      snapshotId
+      name
+      logo
+      personalizedData {
+        followed
+      }
+      tokens(onlyMain: $onlyMain) {
+        id
+        name
+        price
+      }
+    }
+  }
+`
