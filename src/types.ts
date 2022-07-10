@@ -1,11 +1,3 @@
-export type TPortfolioResponse = {
-  title: string
-  symbol: string
-  icon: string
-  amount: number
-  share: number
-}[]
-
 export type TProposal = {
   id: string
   snapshotId: string
@@ -60,6 +52,7 @@ export type TDAO = {
 }
 
 export type TUser = {
+  id: string
   avatarUrl: string
   wallet: {
     address: string

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Text, View, ScrollView, Image, ActivityIndicator} from 'react-native'
+import {Text, View, ScrollView, Image} from 'react-native'
 import {useQuery} from '@apollo/client'
 import numeral from 'numeral'
 
@@ -7,12 +7,14 @@ import {TDAO} from '../../types'
 import {GET_DAO_DETAIL, handleHTTPError} from '../../services/api'
 import {convertURIForLogo} from '../feed'
 import MarkdownText from '../../components/MarkdownText'
+import Follow from '../../components/Follow'
 import styles from './styles'
 
 function DAOScreen({route}: any) {
   const [dao, setDao] = React.useState<TDAO>()
 
-  const {loading: loadingDao} = useQuery(GET_DAO_DETAIL, {
+  useQuery(GET_DAO_DETAIL, {
+    fetchPolicy: 'cache-and-network',
     variables: {
       ids: [route.params.daoId],
       onlyMain: true,
@@ -26,12 +28,7 @@ function DAOScreen({route}: any) {
     },
   })
 
-  //TODO change token name to short variant
-  return loadingDao ? (
-    <View style={styles.loadingWrapperFullScreen}>
-      <ActivityIndicator size="large" color="#8463DF" />
-    </View>
-  ) : dao ? (
+  return dao ? (
     <ScrollView style={styles.daoWrapper}>
       <View style={styles.daoInfoWrapper}>
         <Image
@@ -59,6 +56,9 @@ function DAOScreen({route}: any) {
               {dao.tokens[0].name}
             </Text>
           </Text>
+        </View>
+        <View style={styles.daoFollowSvg}>
+          <Follow daoId={dao.id} userFollowed={dao.personalizedData.followed} />
         </View>
       </View>
       <View>

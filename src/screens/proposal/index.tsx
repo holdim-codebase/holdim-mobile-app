@@ -35,8 +35,8 @@ function ProposalScreen({route, navigation}: any) {
     navigation.navigate('FullProposal', {proposal})
   }
 
-  const openDAODescription = (daoId: string, followed: boolean) => {
-    navigation.navigate('DAO', {daoId, followed})
+  const openDAODescription = (daoId: string) => {
+    navigation.navigate('DAO', {daoId})
   }
 
   React.useEffect(() => {
@@ -50,13 +50,7 @@ function ProposalScreen({route, navigation}: any) {
     <ScrollView style={styles.proposalWrapper}>
       {route.params.proposal ? (
         <View style={styles.proposalWrapper}>
-          <TouchableOpacity
-            onPress={() =>
-              openDAODescription(
-                proposal.dao.id,
-                proposal.dao.personalizedData.followed,
-              )
-            }>
+          <TouchableOpacity onPress={() => openDAODescription(proposal.dao.id)}>
             <View style={styles.proposalTopSectionWrapper}>
               <Image
                 style={styles.proposalIcon}
