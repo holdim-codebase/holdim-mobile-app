@@ -37,7 +37,7 @@ function SearchScreen({navigation}: any) {
   const getSearchedDaoList = (text?: string) => {
     if (text) {
       const filteredDaoList = daoListAll.filter(dao =>
-        dao.name.toLowerCase().startsWith(text.toLowerCase()),
+        dao.name.toLowerCase().includes(text.toLowerCase()),
       )
       setDaoList(filteredDaoList)
     } else {
@@ -82,12 +82,12 @@ function SearchScreen({navigation}: any) {
                     />
                     <View style={styles.searchDaoTextWrapper}>
                       <Text style={styles.searchDaoName}>{dao.name}</Text>
-                      <Text style={styles.searchDaoPrice}>
-                        {dao.tokens && dao.tokens[0].name} |{' '}
-                        {dao.tokens &&
-                          numeral(dao.tokens[0].price).format('0[.]00')}{' '}
-                        USD
-                      </Text>
+                      {dao.tokens && dao.tokens.length ? (
+                        <Text style={styles.searchDaoPrice}>
+                          {dao.tokens[0].symbol} |{' '}
+                          {numeral(dao.tokens[0].price).format('0[.]00')} USD
+                        </Text>
+                      ) : null}
                     </View>
                   </View>
                 </TouchableWithoutFeedback>

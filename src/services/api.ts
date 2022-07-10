@@ -144,6 +144,7 @@ export const GET_DAO_LIST = gql`
         id
         name
         price
+        symbol
       }
     }
   }

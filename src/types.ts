@@ -53,6 +53,7 @@ export type TDAO = {
       personalizedData: {
         quantity: number
       }
+      symbol: string
     },
   ]
   personalizedData: {followed: boolean}
