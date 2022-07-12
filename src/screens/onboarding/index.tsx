@@ -3,19 +3,18 @@ import {
   Dimensions,
   FlatList,
   ListRenderItemInfo,
-  StatusBar,
+  SafeAreaView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
 import normalize from 'react-native-normalize'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import Arrow from '../../assets/images/svg/ArrowBack.svg'
 import {TSlide} from '../../types'
 import styles from './styles'
 
-const {width, height} = Dimensions.get('window')
+const {width} = Dimensions.get('window')
 
 const offsetSize: number = 32
 
@@ -37,9 +36,6 @@ const Slide = ({item}: {item: TSlide}) => {
     <View
       style={{
         width: Dimensions.get('screen').width - normalize(31),
-        height,
-        marginTop: '20%',
-        flex: 1,
       }}>
       {item.title && <Text style={styles.onboardingTitle}>{item.title}</Text>}
       <Text style={styles.onboardingSubtitle}>{item.subtitle}</Text>
@@ -57,31 +53,27 @@ const OnboardingScreen = ({navigation}: any) => {
 
   const Footer = () => {
     return (
-      <View style={styles.onboardingBottom}>
-        <View style={styles.btnNextSkipWrapper}>
-          <TouchableOpacity style={styles.btnSkip} onPress={goSkip}>
-            <Text style={styles.btnSkipNextText}>Skip</Text>
-          </TouchableOpacity>
-          {currentSlideIndicator !== 0 ? (
-            <>
-              <View style={{width: '46%'}} />
-              <View style={{paddingRight: normalize(12)}}>
-                <TouchableOpacity
-                  style={styles.btnPrevious}
-                  onPress={goPreviousSlide}>
-                  <Text style={styles.btnSkipNextText}>
-                    <Arrow />
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </>
-          ) : (
-            <View style={{width: '60%'}} />
-          )}
-          <TouchableOpacity style={styles.btnNext} onPress={goNextSlide}>
-            <Text style={styles.btnSkipNextText}>Next</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.btnNextSkipWrapper}>
+        <TouchableOpacity style={styles.btnSkip} onPress={onSkip}>
+          <Text style={styles.btnNextText}>Skip</Text>
+        </TouchableOpacity>
+        {currentSlideIndicator !== 0 ? (
+          <>
+            <View style={{width: '46%'}} />
+            <View>
+              <TouchableOpacity
+                style={styles.btnPrevious}
+                onPress={onPreviousSlide}>
+                <Arrow />
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <View style={{width: '60%'}} />
+        )}
+        <TouchableOpacity style={styles.btnNext} onPress={onNextSlide}>
+          <Text style={styles.btnNextText}>Next</Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -93,7 +85,7 @@ const OnboardingScreen = ({navigation}: any) => {
     setCurrentSlideIndicator(currentIndex)
   }
 
-  const goNextSlide = () => {
+  const onNextSlide = () => {
     const nextSlideIndex: number = currentSlideIndicator + 1
     if (nextSlideIndex != slides.length) {
       const offset: number = nextSlideIndex * width - normalize(offsetSize)
@@ -104,7 +96,7 @@ const OnboardingScreen = ({navigation}: any) => {
     }
   }
 
-  const goPreviousSlide = () => {
+  const onPreviousSlide = () => {
     const previousSlideIndex: number = currentSlideIndicator - 1
     if (currentSlideIndicator != 0) {
       const offset: number = previousSlideIndex * width - normalize(offsetSize)
@@ -113,27 +105,28 @@ const OnboardingScreen = ({navigation}: any) => {
     }
   }
 
-  const goSkip = () => {
+  const onSkip = () => {
     navigation.navigate('LoginScreen')
   }
 
   return (
-    <SafeAreaView style={styles.onboardingWrapper}>
-      <StatusBar backgroundColor={'#161616'} />
-      <FlatList
-        ref={ref}
-        style={{width: '100%'}}
-        onMomentumScrollEnd={updateCurrentSlideIndex}
-        pagingEnabled
-        data={slides}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({item}: ListRenderItemInfo<TSlide>) => (
-          <Slide item={item} />
-        )}
-        keyExtractor={(item: TSlide) => item.id}
-      />
-      <Footer />
+    <SafeAreaView style={{flex: 1}}>
+      <View style={styles.onboardingWrapper}>
+        <FlatList
+          ref={ref}
+          style={{width: '100%'}}
+          onMomentumScrollEnd={updateCurrentSlideIndex}
+          pagingEnabled
+          data={slides}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item}: ListRenderItemInfo<TSlide>) => (
+            <Slide item={item} />
+          )}
+          keyExtractor={(item: TSlide) => item.id}
+        />
+        <Footer />
+      </View>
     </SafeAreaView>
   )
 }

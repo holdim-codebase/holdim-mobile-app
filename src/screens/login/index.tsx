@@ -1,8 +1,7 @@
 import * as React from 'react'
 import {
   ActivityIndicator,
-  FlatList,
-  StatusBar,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -62,15 +61,14 @@ const LoginScreen = ({navigation}: any) => {
   }, [walletAddressInput])
 
   return (
-    <SafeAreaView style={styles.loginWrapper}>
-      <StatusBar backgroundColor={'#161616'} />
-      {loadingScreen ? (
-        <View style={styles.loadingWrapper}>
-          <ActivityIndicator size="large" color="#8463DF" />
-        </View>
-      ) : (
-        <>
-          <View style={styles.loginBottom}>
+    <SafeAreaView style={{flex: 1}}>
+      <View style={styles.loginWrapper}>
+        {loadingScreen ? (
+          <View style={styles.loadingWrapper}>
+            <ActivityIndicator size="large" color="#8463DF" />
+          </View>
+        ) : (
+          <ScrollView>
             <View style={styles.loginTitleWrapper}>
               <Text style={styles.loginTitle}>
                 Start your friendly DAO journey
@@ -86,20 +84,15 @@ const LoginScreen = ({navigation}: any) => {
                 ? 'Please enter your wallet address or ENS name below'
                 : 'Wallet address or ENS you entered is not correct'}
             </Text>
-            <FlatList
-              style={{paddingBottom: 8}}
-              data={[
-                {key: '1', title: 'Starts with 0x'},
-                {key: '2', title: 'Starts with 0x'},
-                {key: '3', title: 'Starts with 0x'},
-              ]}
-              renderItem={({item}) => (
-                <Text style={styles.loginDescription}>
-                  {'\u2022' + '  '}
-                  {item.title}
-                </Text>
-              )}
-            />
+            <Text style={styles.loginDescription}>
+              {'\u2022' + '  '}Starts with 0x
+            </Text>
+            <Text style={styles.loginDescription}>
+              {'\u2022' + '  '}Supported only Ethereum address
+            </Text>
+            <Text style={styles.loginDescription}>
+              {'\u2022' + '  '}Usually have 40-44 symbols
+            </Text>
             <TextInput
               style={[
                 styles.loginTextInput,
@@ -128,9 +121,9 @@ const LoginScreen = ({navigation}: any) => {
                 <Text style={styles.loginBtnGoTitle}>GO</Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </>
-      )}
+          </ScrollView>
+        )}
+      </View>
     </SafeAreaView>
   )
 }
