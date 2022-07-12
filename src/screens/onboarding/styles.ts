@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000000',
     paddingHorizontal: normalize(17),
-    paddingVertical: 0,
+    paddingVertical: normalize(92),
   },
   onboardingTitle: {
     color: '#FFFFFF',
@@ -22,9 +22,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: normalize(64),
     fontWeight: 'bold',
-  },
-  onboardingBottom: {
-    marginBottom: normalize(92),
   },
   btnNextSkipWrapper: {
     flexDirection: 'row',
@@ -43,6 +40,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: normalize(34),
     width: normalize(34),
+    marginRight: normalize(12),
     borderRadius: 5,
     backgroundColor: '#8463DF',
     justifyContent: 'center',
@@ -57,33 +55,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  btnSkipNextText: {
+  btnNextText: {
     fontSize: normalize(12),
     fontWeight: 'bold',
-    color: 'white',
-  },
-  btnAddWalletWrapper: {
-    flex: 1,
-    height: normalize(64),
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: normalize(53),
-  },
-  btnAddWallet: {
-    flex: 1,
-    height: normalize(64),
-    borderRadius: 5,
-    backgroundColor: '#8463DF',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  btnAddWalletTitle: {
-    fontSize: normalize(20),
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  btnAddWalletSubtitle: {
-    fontSize: normalize(12),
     color: 'white',
   },
 })

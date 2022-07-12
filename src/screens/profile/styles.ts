@@ -1,107 +1,134 @@
-import { StyleSheet } from "react-native"
+import {StyleSheet} from 'react-native'
+import normalize from 'react-native-normalize'
 
 const styles = StyleSheet.create({
   loadingWrapper: {
     width: '100%',
     height: '100%',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   profileWrapper: {
     flex: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 24,
-    width: '100%'
+    paddingHorizontal: normalize(16),
+    paddingVertical: normalize(24),
+    width: '100%',
   },
   profileInfoWrapper: {
     width: '100%',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   profileImage: {
-    width: 84,
-    height: 84,
+    width: normalize(80),
+    height: normalize(80),
     borderRadius: 80,
   },
   profileInfoTextWrapper: {
     flexDirection: 'column',
-    marginLeft: 34
+    marginLeft: normalize(24),
+    width: normalize(210),
   },
   profileName: {
-    fontSize: 24,
-    lineHeight: 28,
-    fontWeight: '500',
+    fontSize: normalize(18),
+    fontWeight: '700',
     fontFamily: 'System',
     color: 'white',
   },
   profilePortfolioAmount: {
-    fontSize: 16,
-    lineHeight: 19,
+    fontSize: normalize(16),
+    lineHeight: normalize(26),
     fontWeight: '300',
     fontFamily: 'System',
-    color: 'white'
-  },
-  portfolioTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    lineHeight: 23,
     color: 'white',
-    marginTop: 40,
-    marginBottom: 10,
-    fontFamily: 'System',
   },
   portfolioWrapper: {
     width: '100%',
     flexDirection: 'column',
     height: '100%',
+    marginTop: normalize(29),
+  },
+  portfolioTitle: {
+    fontSize: normalize(20),
+    fontWeight: '700',
+    lineHeight: normalize(23),
+    color: 'white',
+    marginBottom: normalize(10),
+    fontFamily: 'System',
+  },
+  portfolioDaoListWrapper: {
     borderTopColor: 'rgba(193, 193, 193, 0.5)',
     borderTopWidth: 0.5,
-    paddingTop: 10
   },
-  assetWrapper: {
+  portfolioDaoWrapper: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 48,
-    marginVertical: 10,
+    borderBottomColor: 'rgba(193, 193, 193, 0.5)',
+    borderBottomWidth: 0.5,
+    paddingVertical: normalize(14),
   },
   assetLeft: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   assetImage: {
-    width: 32,
-    height: 32
+    width: normalize(32),
+    height: normalize(32),
+    borderRadius: normalize(50),
   },
   assetTextWrapper: {
     height: '100%',
     flexDirection: 'column',
-    marginLeft: 12,
+    paddingLeft: normalize(12),
   },
   assetTitle: {
     color: 'white',
-    fontSize: 16,
-    lineHeight: 19,
-    fontWeight: '400',
+    fontSize: normalize(16),
+    lineHeight: normalize(20),
+    fontWeight: '700',
     fontFamily: 'System',
   },
-  assetShare: {
+  assetShareAmount: {
     color: 'white',
-    fontSize: 12,
-    lineHeight: 14,
+    fontSize: normalize(12),
+    lineHeight: normalize(16),
+    fontWeight: '700',
+    fontFamily: 'System',
+  },
+  assetShareText: {
+    color: 'white',
+    fontSize: normalize(12),
+    lineHeight: normalize(16),
     fontWeight: '300',
-    fontFamily: 'System'
+    fontFamily: 'System',
   },
   assetRight: {
-    flexDirection: 'row'
+    flexDirection: 'column',
   },
-  assetAmount: {
+  assetAmountNumber: {
     color: 'white',
-    fontSize: 16,
-    lineHeight: 19,
+    fontSize: normalize(16),
+    lineHeight: normalize(20),
+    fontWeight: '700',
+    fontFamily: 'System',
+    textAlign: 'right',
+  },
+  assetAmountText: {
+    color: 'white',
+    fontSize: normalize(16),
+    lineHeight: normalize(20),
     fontWeight: '300',
     fontFamily: 'System',
-    textAlign: 'right'
-  }
+    textAlign: 'right',
+  },
+  assetDaoPrice: {
+    color: 'white',
+    fontSize: normalize(12),
+    lineHeight: normalize(16),
+    fontWeight: '300',
+    fontFamily: 'System',
+    textAlign: 'right',
+  },
 })
 
 export default styles

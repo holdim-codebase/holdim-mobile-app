@@ -5,14 +5,11 @@ const styles = StyleSheet.create({
   loginWrapper: {
     flex: 1,
     backgroundColor: '#000000',
-    marginLeft: normalize(16),
-    marginRight: normalize(16),
+    paddingHorizontal: normalize(16),
+    paddingVertical: normalize(92),
   },
   loginTitleWrapper: {
-    color: '#8463DF',
-    fontSize: normalize(48),
-    marginBottom: normalize(108),
-    fontWeight: 'bold',
+    paddingBottom: '25%',
   },
   loginTitle: {
     color: '#8463DF',
@@ -24,24 +21,18 @@ const styles = StyleSheet.create({
     fontSize: normalize(64),
     fontWeight: 'bold',
   },
-  loginBottom: {
-    marginTop: 'auto',
-    marginBottom: normalize(92),
-  },
   loginTextInput: {
     backgroundColor: '#161616',
     borderRadius: 7,
     paddingHorizontal: normalize(16),
     height: normalize(64),
-    marginBottom: normalize(16),
+    marginVertical: normalize(16),
     color: '#FFFFFF',
   },
   loginBtnGoWrapper: {
     flex: 1,
-    height: normalize(64),
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: normalize(53),
   },
   loginBtnGo: {
     flex: 1,

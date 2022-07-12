@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import numeral from 'numeral'
 import moment from 'moment'
-import {useLazyQuery} from '@apollo/client'
+import {useLazyQuery, useQuery} from '@apollo/client'
 
 import {TProposal, TPool} from '../../types'
 import {GET_POOL, GET_PROPOSALS, handleHTTPError} from '../../services/api'
@@ -28,9 +28,11 @@ function FeedScreen({navigation}: any) {
   const [pools, setPools] = React.useState<TPool[]>([])
   const dateNow = new Date()
 
-  const [getProposals, {loading: loadingProposals}] = useLazyQuery(
+  const {loading: loadingProposals, refetch: refetchGetProposals} = useQuery(
     GET_PROPOSALS,
     {
+      fetchPolicy: 'cache-and-network',
+      variables: {onlyFollowedDaos: true},
       onCompleted: res => {
         setProposals(res.proposals)
         setRefreshing(false)
@@ -69,7 +71,11 @@ function FeedScreen({navigation}: any) {
 
   const onRefresh = () => {
     setRefreshing(true)
-    getProposals()
+    refetchGetProposals()
+  }
+
+  const openDAODescription = (daoId: string) => {
+    navigation.navigate('DAO', {daoId})
   }
 
   React.useEffect(() => {
@@ -80,10 +86,6 @@ function FeedScreen({navigation}: any) {
       getArrayWithPoolsForProposals(snapshotIds)
     }
   }, [proposals])
-
-  React.useEffect(() => {
-    getProposals()
-  }, [])
 
   return (
     <ScrollView
@@ -103,15 +105,22 @@ function FeedScreen({navigation}: any) {
             <TouchableOpacity key={i} onPress={() => openProposal(item, pool)}>
               <View style={styles.proposalWrapper}>
                 <View style={styles.proposalImageWrapper}>
-                  <Image
-                    source={{
-                      uri: convertURIForLogo(item.dao.logo),
-                    }}
-                    style={styles.proposalImage}
-                  />
+                  <TouchableOpacity
+                    onPress={() => openDAODescription(item.dao.id)}>
+                    <Image
+                      source={{
+                        uri: convertURIForLogo(item.dao.logo),
+                      }}
+                      style={styles.proposalImage}
+                    />
+                  </TouchableOpacity>
                 </View>
+
                 <View style={styles.proposalContentWrapper}>
-                  <Text style={styles.proposalTitle}>{item.dao.name}</Text>
+                  <TouchableOpacity
+                    onPress={() => openDAODescription(item.dao.id)}>
+                    <Text style={styles.proposalTitle}>{item.dao.name}</Text>
+                  </TouchableOpacity>
                   <Text style={styles.proposalDescription}>
                     {item.juniorDescription}
                   </Text>

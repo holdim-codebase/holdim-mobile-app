@@ -65,8 +65,8 @@ export const REGISTER_USER = gql`
 `
 
 export const GET_PROPOSALS = gql`
-  query GetProposals {
-    proposals {
+  query GetProposals($onlyFollowedDaos: Boolean) {
+    proposals(onlyFollowedDaos: $onlyFollowedDaos) {
       id
       snapshotId
       title
@@ -74,6 +74,9 @@ export const GET_PROPOSALS = gql`
         id
         name
         logo
+        personalizedData {
+          followed
+        }
       }
       juniorDescription
       middleDescription
@@ -97,6 +100,106 @@ export const GET_POOL = gql`
       scores_total
       votes
       quorum
+    }
+  }
+`
+
+export const GET_DAO_DETAIL = gql`
+  query GetDAOs($ids: [ID!], $onlyMain: Boolean) {
+    daos(ids: $ids) {
+      id
+      snapshotId
+      name
+      logo
+      overview
+      tokenOverview
+      tokens(onlyMain: $onlyMain) {
+        id
+        name
+        marketCap
+        totalSupply
+        price
+        personalizedData {
+          quantity
+        }
+      }
+      personalizedData {
+        followed
+      }
+    }
+  }
+`
+
+export const GET_DAO_LIST = gql`
+  query GetDAOs($ids: [ID!], $onlyMain: Boolean) {
+    daos(ids: $ids) {
+      id
+      snapshotId
+      name
+      logo
+      personalizedData {
+        followed
+      }
+      tokens(onlyMain: $onlyMain) {
+        id
+        name
+        price
+        symbol
+      }
+    }
+  }
+`
+
+export const FOLLOW_DAO = gql`
+  mutation FollowDao($daoId: ID!) {
+    followDao(daoId: $daoId) {
+      id
+      name
+      personalizedData {
+        followed
+      }
+    }
+  }
+`
+
+export const UNFOLLOW_DAO = gql`
+  mutation UnfollowDao($unfollowDaoDaoId2: ID!) {
+    unfollowDao(daoId: $unfollowDaoDaoId2) {
+      id
+      name
+      personalizedData {
+        followed
+      }
+    }
+  }
+`
+
+export const GET_USER_INFO = gql`
+  query GET_USER_INFO($tokensOnlyMain2: Boolean) {
+    me {
+      id
+      avatarUrl
+      wallet {
+        address
+        tokens {
+          personalizedData {
+            quantity
+          }
+        }
+      }
+      followedDaos {
+        id
+        name
+        logo
+        tokens(onlyMain: $tokensOnlyMain2) {
+          personalizedData {
+            quantity
+          }
+          totalSupply
+          price
+          symbol
+        }
+      }
     }
   }
 `
