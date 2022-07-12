@@ -15,6 +15,7 @@ import {TDAO} from '../../types'
 import {GET_DAO_LIST, handleHTTPError} from '../../services/api'
 import {convertURIForLogo} from '../feed'
 import styles from './styles'
+import Follow from '../../components/Follow'
 
 function SearchScreen({navigation}: any) {
   const [daoListAll, setDaoListAll] = React.useState<TDAO[]>([])
@@ -45,8 +46,8 @@ function SearchScreen({navigation}: any) {
     }
   }
 
-  const openDAODescription = (daoId: string, followed: boolean) => {
-    navigation.navigate('DAO', {daoId, followed})
+  const openDAODescription = (daoId: string) => {
+    navigation.navigate('DAO', {daoId})
   }
 
   return (
@@ -72,9 +73,7 @@ function SearchScreen({navigation}: any) {
               return (
                 <TouchableWithoutFeedback
                   key={i}
-                  onPress={() =>
-                    openDAODescription(dao.id, dao.personalizedData.followed)
-                  }>
+                  onPress={() => openDAODescription(dao.id)}>
                   <View style={styles.searchDaoWrapper}>
                     <Image
                       style={styles.searchDaoLogo}
@@ -88,6 +87,12 @@ function SearchScreen({navigation}: any) {
                           {numeral(dao.tokens[0].price).format('0[.]00')} USD
                         </Text>
                       ) : null}
+                    </View>
+                    <View style={styles.searchDaoFollowSvg}>
+                      <Follow
+                        daoId={dao.id}
+                        userFollowed={dao.personalizedData.followed}
+                      />
                     </View>
                   </View>
                 </TouchableWithoutFeedback>

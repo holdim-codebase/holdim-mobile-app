@@ -9,8 +9,8 @@ import styles from './styles'
 function FullProposalScreen({route, navigation}: any) {
   const [proposal, setProposal] = React.useState<TProposal>()
 
-  const openDAODescription = (daoId: string, followed: boolean) => {
-    navigation.navigate('DAO', {daoId, followed})
+  const openDAODescription = (daoId: string) => {
+    navigation.navigate('DAO', {daoId})
   }
 
   React.useEffect(() => {
@@ -25,13 +25,7 @@ function FullProposalScreen({route, navigation}: any) {
     <ScrollView style={styles.proposalWrapper}>
       {proposal ? (
         <View style={styles.proposalWrapper}>
-          <TouchableOpacity
-            onPress={() =>
-              openDAODescription(
-                proposal.dao.id,
-                proposal.dao.personalizedData.followed,
-              )
-            }>
+          <TouchableOpacity onPress={() => openDAODescription(proposal.dao.id)}>
             <View style={styles.proposalTopSectionWrapper}>
               <Image
                 style={styles.proposalIcon}
