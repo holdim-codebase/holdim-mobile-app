@@ -74,6 +74,7 @@ export type TUser = {
           personalizedData: {quantity: string}
           totalSupply: number
           price: number
+          symbol: string
         },
       ]
     },
