@@ -59,6 +59,35 @@ export type TDAO = {
   personalizedData: {followed: boolean}
 }
 
+export type TUser = {
+  avatarUrl: string
+  wallet: {
+    address: string
+    tokens: [
+      {
+        personalizedData: {
+          quantity: string
+        }
+      },
+    ]
+  }
+  followedDaos: [
+    {
+      id: string
+      name: string
+      logo: string
+      tokens: [
+        {
+          personalizedData: {quantity: string}
+          totalSupply: number
+          price: number
+          symbol: string
+        },
+      ]
+    },
+  ]
+}
+
 export type TSlide = {
   id: string
   title: string

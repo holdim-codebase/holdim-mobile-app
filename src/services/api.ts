@@ -149,3 +149,32 @@ export const GET_DAO_LIST = gql`
     }
   }
 `
+
+export const GET_USER_INFO = gql`
+  query GET_USER_INFO($tokensOnlyMain2: Boolean) {
+    me {
+      avatarUrl
+      wallet {
+        address
+        tokens {
+          personalizedData {
+            quantity
+          }
+        }
+      }
+      followedDaos {
+        id
+        name
+        logo
+        tokens(onlyMain: $tokensOnlyMain2) {
+          personalizedData {
+            quantity
+          }
+          totalSupply
+          price
+          symbol
+        }
+      }
+    }
+  }
+`
