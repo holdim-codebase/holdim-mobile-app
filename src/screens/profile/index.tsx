@@ -19,7 +19,7 @@ function ProfileScreen({navigation}: any) {
   const [portfolio, setPortfolio] = React.useState<TUser>()
 
   const {loading: loadingUserInfo} = useQuery(GET_USER_INFO, {
-    variables: {onlyMain: true},
+    variables: {tokensOnlyMain2: true},
     onCompleted: res => {
       setPortfolio(res.me)
     },
@@ -76,9 +76,12 @@ function ProfileScreen({navigation}: any) {
                           <Text style={styles.assetShareText}>
                             <Text style={styles.assetShareAmount}>
                               {(
-                                +followedDao.tokens[0].personalizedData
-                                  .quantity / followedDao.tokens[0].totalSupply
+                                (+followedDao.tokens[0].personalizedData
+                                  .quantity /
+                                  followedDao.tokens[0].totalSupply) *
+                                100
                               ).toFixed(3)}
+                              %
                             </Text>{' '}
                             shares
                           </Text>
@@ -94,7 +97,7 @@ function ProfileScreen({navigation}: any) {
                               ? followedDao.tokens[0].personalizedData.quantity
                               : '< 0.01'}
                           </Text>{' '}
-                          1INCH
+                          {followedDao.tokens[0].symbol}
                         </Text>
                         <Text style={styles.assetDaoPrice}>
                           {numeral(followedDao.tokens[0].price).format(
