@@ -122,6 +122,7 @@ export const GET_DAO_DETAIL = gql`
         personalizedData {
           quantity
         }
+        symbol
       }
       personalizedData {
         followed
