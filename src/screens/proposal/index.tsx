@@ -16,20 +16,20 @@ import Link from '../../assets/images/svg/Link.svg'
 import styles from './styles'
 import {openLinkInAppBrowser} from '../../components/MarkdownText'
 
+export const shortenAddress = (address: string) => {
+  if (address.length <= 12) return address
+
+  const start = address.slice(0, 6)
+  const end = address.slice(address.length - 4, address.length)
+  const result = start + '...' + end
+  return result
+}
+
 function ProposalScreen({route, navigation}: any) {
   const [proposal, setProposal] = React.useState<TProposal>(
     route.params.proposal,
   )
   const [pool, setPool] = React.useState<TPool>(route.params.pool)
-
-  const shortenAddress = (address: string) => {
-    if (address.length <= 12) return address
-
-    const start = address.slice(0, 6)
-    const end = address.slice(address.length - 4, address.length)
-    const result = start + '...' + end
-    return result
-  }
 
   const openFullProposal = (proposal: TProposal) => {
     navigation.navigate('FullProposal', {proposal})

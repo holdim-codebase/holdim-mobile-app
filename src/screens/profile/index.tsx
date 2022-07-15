@@ -14,6 +14,7 @@ import {TUser} from '../../types'
 import {GET_USER_INFO, handleHTTPError} from '../../services/api'
 import {convertURIForLogo} from '../feed'
 import styles from './styles'
+import {shortenAddress} from '../proposal'
 
 function ProfileScreen({navigation}: any) {
   const [portfolio, setPortfolio] = React.useState<TUser>()
@@ -55,7 +56,9 @@ function ProfileScreen({navigation}: any) {
               source={{uri: portfolio.avatarUrl}}
             />
             <View style={styles.profileInfoTextWrapper}>
-              <Text style={styles.profileName}>{portfolio.wallet.address}</Text>
+              <Text style={styles.profileName}>
+                {shortenAddress(portfolio.wallet.address)}
+              </Text>
               <Text style={styles.profilePortfolioAmount}>
                 You govern: {portfolio.followedDaos.length} DAOs
               </Text>
@@ -104,7 +107,10 @@ function ProfileScreen({navigation}: any) {
                         {followedDao.tokens[0].symbol}
                       </Text>
                       <Text style={styles.assetDaoPrice}>
-                        {numeral(followedDao.tokens[0].price).format('0[.]00')}{' '}
+                        {numeral(
+                          followedDao.tokens[0].price *
+                            +followedDao.tokens[0].personalizedData.quantity,
+                        ).format('0[.]00')}{' '}
                         USD
                       </Text>
                     </View>
