@@ -54,7 +54,7 @@ function SearchScreen({navigation}: any) {
     <View style={styles.searchWrapper}>
       <SearchBar
         style={styles.searchBar}
-        textInputStyle={{color: 'white', fontSize: 12}}
+        textInputStyle={styles.searchBarText}
         searchIconImageStyle={{tintColor: 'white'}}
         clearIconImageStyle={{tintColor: 'white'}}
         placeholderTextColor="white"
@@ -75,18 +75,20 @@ function SearchScreen({navigation}: any) {
                   key={i}
                   onPress={() => openDAODescription(dao.id)}>
                   <View style={styles.searchDaoWrapper}>
-                    <Image
-                      style={styles.searchDaoLogo}
-                      source={{uri: convertURIForLogo(dao.logo)}}
-                    />
-                    <View style={styles.searchDaoTextWrapper}>
-                      <Text style={styles.searchDaoName}>{dao.name}</Text>
-                      {dao.tokens && dao.tokens.length ? (
-                        <Text style={styles.searchDaoPrice}>
-                          {dao.tokens[0].symbol} |{' '}
-                          {numeral(dao.tokens[0].price).format('0[.]00')} USD
-                        </Text>
-                      ) : null}
+                    <View style={styles.searchDaoLogoTextWrapper}>
+                      <Image
+                        style={styles.searchDaoLogo}
+                        source={{uri: convertURIForLogo(dao.logo)}}
+                      />
+                      <View style={styles.searchDaoTextWrapper}>
+                        <Text style={styles.searchDaoName}>{dao.name}</Text>
+                        {dao.tokens && dao.tokens.length ? (
+                          <Text style={styles.searchDaoPrice}>
+                            {dao.tokens[0].symbol} |{' '}
+                            {numeral(dao.tokens[0].price).format('0[.]00')} USD
+                          </Text>
+                        ) : null}
+                      </View>
                     </View>
                     <View style={styles.searchDaoFollowSvg}>
                       <Follow
