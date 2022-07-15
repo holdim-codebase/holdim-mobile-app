@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Image, StatusBar} from 'react-native'
+import {StatusBar} from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native'
@@ -19,12 +19,10 @@ import OnboardingScreen from './src/screens/onboarding'
 import LoginScreen from './src/screens/login'
 import {client} from './src/services/api'
 
-const feedIcon = require('./src/assets/icons/feed.png')
-const feedFocusedIcon = require('./src/assets/icons/feedFocused.png')
-const profileIcon = require('./src/assets/icons/profile.png')
-const profileFocusedIcon = require('./src/assets/icons/profileFocused.png')
-const searchIcon = require('./src/assets/icons/search.png')
-const searchFocusedIcon = require('./src/assets/icons/searchFocused.png')
+// icons svg
+import FeedIcon from './src/assets/images/svg/FeedIcon.svg'
+import SearchIcon from './src/assets/images/svg/SearchIcon.svg'
+import ProfileIcon from './src/assets/images/svg/ProfileIcon.svg'
 
 const tabIconSizeMultiplier = 0.9
 
@@ -113,12 +111,10 @@ const MainScreen = () => {
           tabBarShowLabel: false,
           tabBarIcon: ({size, focused, color}) => {
             return (
-              <Image
-                style={{
-                  width: size * tabIconSizeMultiplier,
-                  height: size * tabIconSizeMultiplier,
-                }}
-                source={focused ? feedFocusedIcon : feedIcon}
+              <FeedIcon
+                width={size * tabIconSizeMultiplier}
+                height={size * tabIconSizeMultiplier}
+                fill={focused ? '#8463DF' : '#E2E2E2'}
               />
             )
           },
@@ -131,12 +127,10 @@ const MainScreen = () => {
           tabBarShowLabel: false,
           tabBarIcon: ({size, focused, color}) => {
             return (
-              <Image
-                style={{
-                  width: size * tabIconSizeMultiplier,
-                  height: size * tabIconSizeMultiplier,
-                }}
-                source={focused ? searchFocusedIcon : searchIcon}
+              <SearchIcon
+                width={size * tabIconSizeMultiplier}
+                height={size * tabIconSizeMultiplier}
+                fill={focused ? '#8463DF' : '#E2E2E2'}
               />
             )
           },
@@ -149,12 +143,10 @@ const MainScreen = () => {
           tabBarShowLabel: false,
           tabBarIcon: ({size, focused, color}) => {
             return (
-              <Image
-                style={{
-                  width: size * tabIconSizeMultiplier,
-                  height: size * tabIconSizeMultiplier,
-                }}
-                source={focused ? profileFocusedIcon : profileIcon}
+              <ProfileIcon
+                width={size * tabIconSizeMultiplier}
+                height={size * tabIconSizeMultiplier}
+                fill={focused ? '#8463DF' : '#E2E2E2'}
               />
             )
           },
