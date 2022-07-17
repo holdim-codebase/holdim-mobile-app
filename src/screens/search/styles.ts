@@ -22,6 +22,10 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: normalize(10),
   },
+  searchBarText: {
+    color: 'white',
+    fontSize: normalize(12),
+  },
   textInputStyle: {
     color: '#DDDDDD',
     fontSize: normalize(12),
@@ -36,8 +40,13 @@ const styles = StyleSheet.create({
     paddingVertical: normalize(14),
     alignContent: 'center',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     borderBottomColor: '#2F2F2F',
     borderBottomWidth: 1,
+  },
+  searchDaoLogoTextWrapper: {
+    alignContent: 'center',
+    flexDirection: 'row',
   },
   searchDaoLogo: {
     width: normalize(32),
@@ -46,7 +55,6 @@ const styles = StyleSheet.create({
   },
   searchDaoTextWrapper: {
     paddingLeft: normalize(10),
-    width: normalize(296),
   },
   searchDaoName: {
     color: 'white',
@@ -55,7 +63,6 @@ const styles = StyleSheet.create({
   },
   searchDaoPrice: {
     color: 'white',
-
     fontSize: normalize(12),
     fontWeight: '300',
   },

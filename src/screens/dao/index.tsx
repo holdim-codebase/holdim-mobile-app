@@ -40,8 +40,9 @@ function DAOScreen({route}: any) {
           <Text style={styles.daoUserDetail}>
             {
               +(
-                dao.tokens[0].personalizedData.quantity /
-                dao.tokens[0].totalSupply
+                (dao.tokens[0].personalizedData.quantity /
+                  dao.tokens[0].totalSupply) *
+                100
               ).toFixed(3)
             }
             % shares
@@ -53,7 +54,7 @@ function DAOScreen({route}: any) {
               {numeral(dao.tokens[0].personalizedData.quantity).format(
                 '0[.]00',
               )}{' '}
-              {dao.tokens[0].name}
+              {dao.tokens[0].symbol}
             </Text>
           </Text>
         </View>

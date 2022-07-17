@@ -55,7 +55,11 @@ const LoginScreen = ({navigation}: any) => {
 
   // validate wallet address when user write it
   React.useEffect(() => {
-    walletAddressInput && walletAddressInput.length > 255
+    if (!walletAddressInput) return
+    const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
+    walletAddressInput.length > 255 ||
+    !walletAddressInput.startsWith('0x') ||
+    regex.test(walletAddressInput)
       ? setIncorrectWalletAddress(true)
       : setIncorrectWalletAddress(false)
   }, [walletAddressInput])
@@ -80,18 +84,8 @@ const LoginScreen = ({navigation}: any) => {
                 incorrectWalletAddress &&
                   styles.loginIncorrectWalletAddressText,
               ]}>
-              {!incorrectWalletAddress
-                ? 'Please enter your wallet address or ENS name below'
-                : 'Wallet address or ENS you entered is not correct'}
-            </Text>
-            <Text style={styles.loginDescription}>
-              {'\u2022' + '  '}Starts with 0x
-            </Text>
-            <Text style={styles.loginDescription}>
-              {'\u2022' + '  '}Supported only Ethereum address
-            </Text>
-            <Text style={styles.loginDescription}>
-              {'\u2022' + '  '}Usually have 40-44 symbols
+              {incorrectWalletAddress &&
+                'Wallet address you entered is not correct'}
             </Text>
             <TextInput
               style={[

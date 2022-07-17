@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   daoImage: {
     width: normalize(80),
     height: normalize(80),
+    borderRadius: normalize(50),
   },
   daoInfoTextWrapper: {
     flexDirection: 'column',
