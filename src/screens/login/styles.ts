@@ -6,10 +6,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000000',
     paddingHorizontal: normalize(16),
-    paddingVertical: normalize(92),
+    paddingVertical: normalize(53),
   },
   loginTitleWrapper: {
-    paddingBottom: '25%',
+    // paddingBottom: '25%',
   },
   loginTitle: {
     color: '#8463DF',
@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   loginDescriptionTitle: {
-    fontSize: normalize(20),
+    fontSize: normalize(15),
     color: '#FFFFFF',
-    paddingBottom: normalize(16),
+    paddingTop: normalize(28),
   },
   loginDescription: {
     fontSize: normalize(16),
