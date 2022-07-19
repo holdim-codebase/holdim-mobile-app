@@ -20,9 +20,12 @@ import LoginScreen from './src/screens/login'
 import {client} from './src/services/api'
 
 // icons svg
-import FeedIcon from './src/assets/images/svg/FeedIcon.svg'
-import SearchIcon from './src/assets/images/svg/SearchIcon.svg'
-import ProfileIcon from './src/assets/images/svg/ProfileIcon.svg'
+import FeedIcon from './src/assets/images/svg/Home.gray.svg'
+import SearchIcon from './src/assets/images/svg/Search.gray.svg'
+import ProfileIcon from './src/assets/images/svg/Profile.gray.svg'
+import FeedIconFocused from './src/assets/images/svg/Home.purple.svg'
+import SearchIconFocused from './src/assets/images/svg/Search.purple.svg'
+import ProfileIconFocused from './src/assets/images/svg/Profile.purple.svg'
 
 const tabIconSizeMultiplier = 0.9
 
@@ -110,11 +113,15 @@ const MainScreen = () => {
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({size, focused, color}) => {
-            return (
+            return focused ? (
+              <FeedIconFocused
+                width={size * tabIconSizeMultiplier}
+                height={size * tabIconSizeMultiplier}
+              />
+            ) : (
               <FeedIcon
                 width={size * tabIconSizeMultiplier}
                 height={size * tabIconSizeMultiplier}
-                fill={focused ? '#8463DF' : '#E2E2E2'}
               />
             )
           },
@@ -126,11 +133,15 @@ const MainScreen = () => {
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({size, focused, color}) => {
-            return (
+            return focused ? (
+              <SearchIconFocused
+                width={size * tabIconSizeMultiplier}
+                height={size * tabIconSizeMultiplier}
+              />
+            ) : (
               <SearchIcon
                 width={size * tabIconSizeMultiplier}
                 height={size * tabIconSizeMultiplier}
-                fill={focused ? '#8463DF' : '#E2E2E2'}
               />
             )
           },
@@ -142,11 +153,15 @@ const MainScreen = () => {
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({size, focused, color}) => {
-            return (
+            return focused ? (
+              <ProfileIconFocused
+                width={size * tabIconSizeMultiplier}
+                height={size * tabIconSizeMultiplier}
+              />
+            ) : (
               <ProfileIcon
                 width={size * tabIconSizeMultiplier}
                 height={size * tabIconSizeMultiplier}
-                fill={focused ? '#8463DF' : '#E2E2E2'}
               />
             )
           },
