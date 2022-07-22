@@ -108,8 +108,9 @@ function ProfileScreen({navigation}: any) {
                       </Text>
                       <Text style={styles.assetDaoPrice}>
                         {numeral(
-                          followedDao.tokens[0].price *
-                            +followedDao.tokens[0].personalizedData.quantity,
+                          followedDao.tokens[0].price * +followedDao.tokens[0].personalizedData.quantity > 0.01 ?
+                          followedDao.tokens[0].price * +followedDao.tokens[0].personalizedData.quantity :
+                          0
                         ).format('0[.]00')}{' '}
                         USD
                       </Text>
