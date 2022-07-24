@@ -42,6 +42,22 @@ function ProfileScreen({navigation}: any) {
     refetchUserData()
   }
 
+  const validateUserTokens = (quantity: number) => {
+    if (quantity >= 0.01 || quantity === 0) {
+      return Number(quantity).toFixed(2)
+    } else {
+      return '< 0.01'
+    }
+  }
+
+  const validateUserUSD = (price: number, quantity: number) => {
+    if (price * quantity >= 0.01) {
+      return Number(price * quantity).toFixed(2)
+    } else {
+      return '< 0.01'
+    }
+  }
+
   return (
     <ScrollView
       style={styles.profileWrapper}
@@ -98,20 +114,21 @@ function ProfileScreen({navigation}: any) {
                     <View style={styles.assetRight}>
                       <Text style={styles.assetAmountText}>
                         <Text style={styles.assetAmountNumber}>
-                          {+followedDao.tokens[0].personalizedData.quantity >=
-                            0.01 ||
-                          +followedDao.tokens[0].personalizedData.quantity === 0
-                            ? followedDao.tokens[0].personalizedData.quantity
-                            : '< 0.01'}
+                          {validateUserTokens(
+                            Number(
+                              followedDao.tokens[0].personalizedData.quantity,
+                            ),
+                          )}
                         </Text>{' '}
                         {followedDao.tokens[0].symbol}
                       </Text>
                       <Text style={styles.assetDaoPrice}>
-                        {numeral(
-                          followedDao.tokens[0].price * +followedDao.tokens[0].personalizedData.quantity > 0.01 ?
-                          followedDao.tokens[0].price * +followedDao.tokens[0].personalizedData.quantity :
-                          0
-                        ).format('0[.]00')}{' '}
+                        {validateUserUSD(
+                          Number(followedDao.tokens[0].price),
+                          Number(
+                            followedDao.tokens[0].personalizedData.quantity,
+                          ),
+                        )}{' '}
                         USD
                       </Text>
                     </View>
