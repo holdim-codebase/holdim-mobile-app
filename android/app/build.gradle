@@ -241,6 +241,7 @@ android {
                     storeFile file(properties['keystorePath'])
                     storePassword properties['keystorePassword']
                     keyAlias properties['keyAlias']
+                    keyPassword properties['keyPassword']
                 } else {
                     println 'Unable to read signing.properties'
                 }
