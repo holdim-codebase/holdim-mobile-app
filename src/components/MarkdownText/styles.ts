@@ -7,7 +7,6 @@ export const markDownStyles = StyleSheet.create({
     fontSize: normalize(16),
     fontWeight: '400',
     lineHeight: normalize(22),
-    marginBottom: normalize(32),
     fontFamily: 'System',
   },
   text: {
