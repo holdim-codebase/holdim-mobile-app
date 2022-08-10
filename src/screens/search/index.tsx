@@ -68,7 +68,7 @@ function SearchScreen({navigation}: any) {
         </View>
       ) : (
         <ScrollView style={styles.searchListWrapper}>
-          {daoList &&
+          {daoList.length !== 0 ? (
             daoList.map((dao, i) => {
               return (
                 <TouchableWithoutFeedback
@@ -99,7 +99,16 @@ function SearchScreen({navigation}: any) {
                   </View>
                 </TouchableWithoutFeedback>
               )
-            })}
+            })
+          ) : (
+            <View style={styles.searchEmptyWrapper}>
+              <Text style={styles.searchEmptyTitle}>Project not found</Text>
+              <Text style={styles.searchEmptyText}>
+                We're sorry, but we couldn't find the project you mentioned. We
+                advise you to check the name of the project and try again.
+              </Text>
+            </View>
+          )}
         </ScrollView>
       )}
     </View>

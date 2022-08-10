@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   searchWrapper: {
     flex: 1,
     paddingHorizontal: normalize(16),
-    paddingVertical: normalize(16),
+    paddingTop: normalize(16),
   },
   searchBar: {
     backgroundColor: 'rgba(196, 196, 196, 0.2)',
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   searchListWrapper: {
     width: '100%',
-    marginVertical: normalize(16),
+    marginTop: normalize(16),
     borderTopColor: '#2F2F2F',
     borderTopWidth: 1,
   },
@@ -68,6 +68,27 @@ const styles = StyleSheet.create({
   },
   searchDaoFollowSvg: {
     paddingTop: normalize(7),
+  },
+  searchEmptyWrapper: {
+    paddingTop: normalize(133),
+    flexDirection: 'column',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  searchEmptyTitle: {
+    paddingBottom: normalize(16),
+    fontWeight: '700',
+    fontSize: normalize(18),
+    color: 'white',
+    textAlign: 'center',
+  },
+  searchEmptyText: {
+    fontWeight: '400',
+    fontSize: normalize(14),
+    textAlign: 'center',
+    color: 'white',
+    lineHeight: normalize(18),
+    width: '90%',
   },
 })
 
