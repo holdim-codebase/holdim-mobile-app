@@ -147,10 +147,9 @@ function ProposalScreen({route, navigation}: any) {
                         {numeral(pool.scores[i]).format('0[.]0a')} {pool.symbol}
                         {'  '}
                         {
-                          +(
-                            (pool.scores[i] * 100) /
-                            pool.scores_total
-                          ).toFixed()
+                          +((pool.scores[i] * 100) / pool.scores_total).toFixed(
+                            2,
+                          )
                         }
                         %
                       </Text>

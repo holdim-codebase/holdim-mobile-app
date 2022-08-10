@@ -157,7 +157,7 @@ function FeedScreen({navigation}: any) {
                                   +(
                                     (pool.scores[i] * 100) /
                                     pool.scores_total
-                                  ).toFixed()
+                                  ).toFixed(2)
                                 }
                                 %
                               </Text>
