@@ -90,6 +90,32 @@ export const GET_PROPOSALS = gql`
   }
 `
 
+export const GET_DAO_PROPOSALS = gql`
+  query GetDaoProposals($daoIds: [ID!]) {
+    proposals(daoIds: $daoIds) {
+      id
+      snapshotId
+      title
+      dao {
+        id
+        name
+        logo
+        personalizedData {
+          followed
+        }
+      }
+      juniorDescription
+      middleDescription
+      seniorDescription
+      startAt
+      endAt
+      author
+      snapshotLink
+      discussionLink
+    }
+  }
+`
+
 export const GET_POOL = gql`
   query GetPool($daoId: String!) {
     proposals(where: {id: $daoId}) {
