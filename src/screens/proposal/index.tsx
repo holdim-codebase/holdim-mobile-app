@@ -6,15 +6,18 @@ import {
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native'
 import moment from 'moment'
 import numeral from 'numeral'
+import {useLazyQuery} from '@apollo/client'
 
 import {TPool, TProposal} from '../../types'
+import {GET_POOL, handleHTTPError} from '../../services/api'
 import {convertURIForLogo} from '../feed'
+import {openLinkInAppBrowser} from '../../components/MarkdownText'
 import Link from '../../assets/images/svg/Link.svg'
 import styles from './styles'
-import {openLinkInAppBrowser} from '../../components/MarkdownText'
 
 export const shortenAddress = (address: string) => {
   if (address.length <= 12) return address
@@ -29,7 +32,20 @@ function ProposalScreen({route, navigation}: any) {
   const [proposal, setProposal] = React.useState<TProposal>(
     route.params.proposal,
   )
-  const [pool, setPool] = React.useState<TPool>(route.params.pool)
+  const [pool, setPool] = React.useState<TPool>(
+    route.params.pool ? route.params.pool : null,
+  )
+
+  const [getPool, {loading: loadingPool}] = useLazyQuery(GET_POOL, {
+    context: {clientName: 'splashClient'},
+    onCompleted: res => {
+      setPool(res.proposals[0])
+    },
+    onError: error => {
+      console.log(error)
+      handleHTTPError()
+    },
+  })
 
   const openFullProposal = (proposal: TProposal) => {
     navigation.navigate('FullProposal', {proposal})
@@ -40,9 +56,15 @@ function ProposalScreen({route, navigation}: any) {
   }
 
   React.useEffect(() => {
-    if (route.params.proposal) {
+    if (route.params.proposal && route.params.pool) {
       setProposal(route.params.proposal)
       setPool(route.params.pool)
+    } else {
+      getPool({
+        variables: {
+          daoId: proposal.snapshotId,
+        },
+      })
     }
   }, [proposal])
 
@@ -134,40 +156,36 @@ function ProposalScreen({route, navigation}: any) {
             </View>
           </View>
           <View style={styles.proposalVotingWrapper}>
-            {route.params.pool &&
-              route.params.pool.choices &&
-              route.params.pool.choices.map(
-                (choiceTitle: string, i: number) => (
-                  <View key={i} style={styles.proposalVotingItemWrapper}>
-                    <View style={styles.proposalVotingItemTextWrapper}>
-                      <Text style={styles.proposalVotingItemText}>
-                        {choiceTitle}
-                      </Text>
-                      <Text style={styles.proposalVotingItemText}>
-                        {numeral(pool.scores[i]).format('0[.]0a')} {pool.symbol}
-                        {'  '}
-                        {
-                          +((pool.scores[i] * 100) / pool.scores_total).toFixed(
-                            2,
-                          )
-                        }
-                        %
-                      </Text>
-                    </View>
-                    <View style={styles.proposalVotingItemBackgroundLine}>
-                      <View
-                        style={{
-                          ...styles.proposalVotingItemInnerLine,
-                          backgroundColor: '#8463DF',
-                          width: `${
-                            (pool.scores[i] * 100) / pool.scores_total
-                          }%`,
-                        }}
-                      />
-                    </View>
+            {loadingPool ? (
+              <View style={styles.loadingWrapper}>
+                <ActivityIndicator size="large" color="#8463DF" />
+              </View>
+            ) : (
+              pool &&
+              pool.choices.map((choiceTitle: string, i: number) => (
+                <View key={i} style={styles.proposalVotingItemWrapper}>
+                  <View style={styles.proposalVotingItemTextWrapper}>
+                    <Text style={styles.proposalVotingItemText}>
+                      {choiceTitle}
+                    </Text>
+                    <Text style={styles.proposalVotingItemText}>
+                      {numeral(pool.scores[i]).format('0[.]0a')} {pool.symbol}
+                      {'  '}
+                      {+((pool.scores[i] * 100) / pool.scores_total).toFixed()}%
+                    </Text>
                   </View>
-                ),
-              )}
+                  <View style={styles.proposalVotingItemBackgroundLine}>
+                    <View
+                      style={{
+                        ...styles.proposalVotingItemInnerLine,
+                        backgroundColor: '#8463DF',
+                        width: `${(pool.scores[i] * 100) / pool.scores_total}%`,
+                      }}
+                    />
+                  </View>
+                </View>
+              ))
+            )}
             {pool && pool.quorum !== 0 && (
               <View style={styles.proposalVotingItemTextWrapper}>
                 <Text style={styles.proposalVotingItemText}>Quorum</Text>

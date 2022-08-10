@@ -13,6 +13,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: normalize(16),
   },
+  loadingWrapper: {
+    width: '100%',
+    height: '100%',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
   proposalIcon: {
     width: normalize(54),
     height: normalize(54),
