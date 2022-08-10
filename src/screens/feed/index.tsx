@@ -5,8 +5,8 @@ import {
   Image,
   ScrollView,
   ActivityIndicator,
-  TouchableOpacity,
   RefreshControl,
+  TouchableWithoutFeedback,
 } from 'react-native'
 import numeral from 'numeral'
 import moment from 'moment'
@@ -91,111 +91,119 @@ function FeedScreen({navigation}: any) {
     <ScrollView
       style={styles.feedWrapper}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl
+          refreshing={refreshing || loadingProposals}
+          onRefresh={onRefresh}
+          tintColor={'white'}
+          titleColor={'#8463DF'}
+          colors={['#8463DF']}
+          progressBackgroundColor={'white'}
+        />
       }>
-      {loadingProposals ? (
-        <View style={styles.loadingWrapperFullScreen}>
-          <ActivityIndicator size="large" color="#8463DF" />
-        </View>
-      ) : (
-        proposals &&
-        proposals.map((item, i) => {
-          const pool = pools[i]
-          return (
-            <TouchableOpacity key={i} onPress={() => openProposal(item, pool)}>
-              <View style={styles.proposalWrapper}>
-                <View style={styles.proposalImageWrapper}>
-                  <TouchableOpacity
-                    onPress={() => openDAODescription(item.dao.id)}>
-                    <Image
-                      source={{
-                        uri: convertURIForLogo(item.dao.logo),
-                      }}
-                      style={styles.proposalImage}
-                    />
-                  </TouchableOpacity>
-                </View>
+      {loadingProposals || refreshing
+        ? null
+        : proposals &&
+          proposals.map((item, i) => {
+            const pool = pools[i]
+            return (
+              <TouchableWithoutFeedback
+                key={i}
+                onPress={() => openProposal(item, pool)}>
+                <View style={styles.proposalWrapper}>
+                  <View style={styles.proposalImageWrapper}>
+                    <TouchableWithoutFeedback
+                      onPress={() => openDAODescription(item.dao.id)}>
+                      <Image
+                        source={{
+                          uri: convertURIForLogo(item.dao.logo),
+                        }}
+                        style={styles.proposalImage}
+                      />
+                    </TouchableWithoutFeedback>
+                  </View>
+                  <View style={styles.proposalContentWrapper}>
+                    <TouchableWithoutFeedback
+                      onPress={() => openDAODescription(item.dao.id)}>
+                      <Text style={styles.proposalTitle}>{item.dao.name}</Text>
+                    </TouchableWithoutFeedback>
+                    <Text style={styles.proposalDescription}>
+                      {item.juniorDescription}
+                    </Text>
+                    <Text style={styles.proposalEndTime}>
+                      {dateNow > new Date(item.endAt)
+                        ? 'Ends:'
+                        : 'Voting ended on'}{' '}
+                      {moment(new Date(item.endAt)).format(
+                        'MMM DD, YYYY, HH:MM A',
+                      )}
+                    </Text>
+                    <View style={styles.proposalVotingWrapper}>
+                      {loadingPool ? (
+                        <View style={styles.loadingWrapper}>
+                          <ActivityIndicator size="large" color="#8463DF" />
+                        </View>
+                      ) : (
+                        pool &&
+                        pool.choices &&
+                        pool.choices.map((choiceTitle: string, i: number) => {
+                          return (
 
-                <View style={styles.proposalContentWrapper}>
-                  <TouchableOpacity
-                    onPress={() => openDAODescription(item.dao.id)}>
-                    <Text style={styles.proposalTitle}>{item.dao.name}</Text>
-                  </TouchableOpacity>
-                  <Text style={styles.proposalDescription}>
-                    {item.juniorDescription}
-                  </Text>
-                  <Text style={styles.proposalEndTime}>
-                    {dateNow > new Date(item.endAt)
-                      ? 'Ends:'
-                      : 'Voting ended on'}{' '}
-                    {moment(new Date(item.endAt)).format(
-                      'MMM DD, YYYY, HH:MM A',
-                    )}
-                  </Text>
-                  <View style={styles.proposalVotingWrapper}>
-                    {loadingPool ? (
-                      <View style={styles.loadingWrapper}>
-                        <ActivityIndicator size="large" color="#8463DF" />
-                      </View>
-                    ) : (
-                      pool &&
-                      pool.choices &&
-                      pool.choices.map((choiceTitle: string, i: number) => {
-                        return (
-                          <View
-                            key={i}
-                            style={styles.proposalVotingItemWrapper}>
-                            <View style={styles.proposalVotingItemTextWrapper}>
-                              <Text style={styles.proposalVotingItemText}>
-                                {choiceTitle}
-                              </Text>
-                              <Text style={styles.proposalVotingItemText}>
-                                {numeral(pool.scores[i]).format('0[.]0a')}{' '}
-                                {pool.symbol}
-                                {'  '}
-                                {
-                                  +(
-                                    (pool.scores[i] * 100) /
-                                    pool.scores_total
-                                  ).toFixed(2)
-                                }
-                                %
-                              </Text>
-                            </View>
                             <View
-                              style={styles.proposalVotingItemBackgroundLine}>
+                              key={i}
+                              style={styles.proposalVotingItemWrapper}>
                               <View
-                                style={{
-                                  ...styles.proposalVotingItemInnerLine,
-                                  backgroundColor: '#8463DF',
-                                  width: `${
-                                    (pool.scores[i] * 100) / pool.scores_total
-                                  }%`,
-                                }}
-                              />
+                                style={styles.proposalVotingItemTextWrapper}>
+                                <Text style={styles.proposalVotingItemText}>
+                                  {choiceTitle}
+                                </Text>
+                                <Text style={styles.proposalVotingItemText}>
+                                  {numeral(pool.scores[i]).format('0[.]0a')}{' '}
+                                  {pool.symbol}
+                                  {'  '}
+                                  {
+                                    +(
+                                      (pool.scores[i] * 100) /
+                                      pool.scores_total
+                                    ).toFixed()
+                                  }
+                                  %
+                                </Text>
+                              </View>
+                              <View
+                                style={styles.proposalVotingItemBackgroundLine}>
+                                <View
+                                  style={{
+                                    ...styles.proposalVotingItemInnerLine,
+                                    backgroundColor: '#8463DF',
+                                    width: `${
+                                      (pool.scores[i] * 100) / pool.scores_total
+                                    }%`,
+                                  }}
+                                />
+                              </View>
                             </View>
-                          </View>
-                        )
-                      })
-                    )}
-                    {!loadingPool && pool && pool.quorum !== 0 && (
-                      <View style={styles.proposalVotingItemTextWrapper}>
-                        <Text style={styles.proposalVotingItemText}>
-                          Quorum
-                        </Text>
-                        <Text style={styles.proposalVotingItemText}>
-                          {numeral(pool && pool.scores_total).format('0[.]0a')}/
-                          {numeral(pool && pool.quorum).format('0[.]0a')}
-                        </Text>
-                      </View>
-                    )}
+                          )
+                        })
+                      )}
+                      {!loadingPool && pool && pool.quorum !== 0 && (
+                        <View style={styles.proposalVotingItemTextWrapper}>
+                          <Text style={styles.proposalVotingItemText}>
+                            Quorum
+                          </Text>
+                          <Text style={styles.proposalVotingItemText}>
+                            {numeral(pool && pool.scores_total).format(
+                              '0[.]0a',
+                            )}
+                            /{numeral(pool && pool.quorum).format('0[.]0a')}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
                   </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          )
-        })
-      )}
+              </TouchableWithoutFeedback>
+            )
+          })}
     </ScrollView>
   )
 }
