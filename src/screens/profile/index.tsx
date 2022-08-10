@@ -44,15 +44,15 @@ function ProfileScreen({navigation}: any) {
 
   const validateUserTokens = (quantity: number) => {
     if (quantity >= 0.01 || quantity === 0) {
-      return Number(quantity).toFixed(2)
+      return +Number(quantity).toFixed(2)
     } else {
-      return '< 0.01'
+      return '0'
     }
   }
 
   const validateUserUSD = (price: number, quantity: number) => {
     if (price * quantity >= 0.01) {
-      return Number(price * quantity).toFixed(2)
+      return +Number(price * quantity).toFixed(2)
     } else {
       return '< 0.01'
     }
