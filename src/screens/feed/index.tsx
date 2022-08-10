@@ -121,7 +121,6 @@ function FeedScreen({navigation}: any) {
                       />
                     </TouchableWithoutFeedback>
                   </View>
-
                   <View style={styles.proposalContentWrapper}>
                     <TouchableWithoutFeedback
                       onPress={() => openDAODescription(item.dao.id)}>
@@ -148,6 +147,7 @@ function FeedScreen({navigation}: any) {
                         pool.choices &&
                         pool.choices.map((choiceTitle: string, i: number) => {
                           return (
+
                             <View
                               key={i}
                               style={styles.proposalVotingItemWrapper}>

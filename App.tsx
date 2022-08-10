@@ -82,6 +82,20 @@ function ProfileStackScreen() {
     <ProfileStack.Navigator screenOptions={headerOptions}>
       <ProfileStack.Screen name="Profile" component={ProfileScreen} />
       <ProfileStack.Screen name="DAO" component={DAOScreen} />
+      <ProfileStack.Screen
+        name="Proposal"
+        component={ProposalScreen}
+        options={{
+          headerTitle: 'Snapshot voting',
+        }}
+      />
+      <ProfileStack.Screen
+        name="FullProposal"
+        component={FullProposalScreen}
+        options={{
+          headerTitle: 'Snapshot voting',
+        }}
+      />
     </ProfileStack.Navigator>
   )
 }
@@ -93,6 +107,20 @@ function SearchStackScreen() {
     <SearchStack.Navigator screenOptions={headerOptions}>
       <SearchStack.Screen name="Search" component={SearchScreen} />
       <SearchStack.Screen name="DAO" component={DAOScreen} />
+      <SearchStack.Screen
+        name="Proposal"
+        component={ProposalScreen}
+        options={{
+          headerTitle: 'Snapshot voting',
+        }}
+      />
+      <SearchStack.Screen
+        name="FullProposal"
+        component={FullProposalScreen}
+        options={{
+          headerTitle: 'Snapshot voting',
+        }}
+      />
     </SearchStack.Navigator>
   )
 }
