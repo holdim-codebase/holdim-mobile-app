@@ -100,7 +100,7 @@ function DAOScreen({route, navigation}: any) {
             In your wallet:
             <Text style={styles.daoUserAmount}>
               {' '}
-              {Number(dao.tokens[0].personalizedData.quantity).toFixed(2)}{' '}
+              {+Number(dao.tokens[0].personalizedData.quantity).toFixed(2)}{' '}
               {dao.tokens[0].symbol}
             </Text>
           </Text>
