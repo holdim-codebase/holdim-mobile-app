@@ -57,11 +57,9 @@ const LoginScreen = ({navigation}: any) => {
   React.useEffect(() => {
     if (!walletAddressInput) return
     const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
-    walletAddressInput.length > 255 ||
-    !walletAddressInput.startsWith('0x') ||
-    regex.test(walletAddressInput)
-      ? setIncorrectWalletAddress(true)
-      : setIncorrectWalletAddress(false)
+    const correctWalletAddress = walletAddressInput.length < 255 && walletAddressInput.startsWith('0x') && !regex.test(walletAddressInput)
+    const correctENS = walletAddressInput.endsWith('.eth')
+    correctWalletAddress || correctENS  ? setIncorrectWalletAddress(false) : setIncorrectWalletAddress(true)
   }, [walletAddressInput])
 
   return (
