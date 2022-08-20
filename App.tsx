@@ -243,7 +243,7 @@ export default function App() {
         />
         <NavigationContainer theme={navTheme}>
           {isFirstLaunch && (
-            <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}}>
               <Stack.Screen
                 name="OnboardingScreen"
                 component={OnboardingScreen}
@@ -253,7 +253,7 @@ export default function App() {
             </Stack.Navigator>
           )}
           {!isFirstLaunch && !alreadyLoggedIn && (
-            <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}}>
               <Stack.Screen name="LoginScreen" component={LoginScreen} />
               <Stack.Screen name="MainScreen" component={MainScreen} />
             </Stack.Navigator>
