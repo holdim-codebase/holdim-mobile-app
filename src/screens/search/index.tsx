@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 import {useQuery} from '@apollo/client'
 import SearchBar from 'react-native-dynamic-search-bar'
-import numeral from 'numeral'
 
 import {TDAO} from '../../types'
 import {GET_DAO_LIST, handleHTTPError} from '../../services/api'

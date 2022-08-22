@@ -171,7 +171,12 @@ function ProposalScreen({route, navigation}: any) {
                     <Text style={styles.proposalVotingItemText}>
                       {numeral(pool.scores[i]).format('0[.]0a')} {pool.symbol}
                       {'  '}
-                      {+((pool.scores[i] * 100) / pool.scores_total).toFixed()}%
+                      {pool.scores_total !== 0
+                        ? +((pool.scores[i] * 100) / pool.scores_total).toFixed(
+                            2,
+                          )
+                        : 0}
+                      %
                     </Text>
                   </View>
                   <View style={styles.proposalVotingItemBackgroundLine}>
@@ -179,7 +184,11 @@ function ProposalScreen({route, navigation}: any) {
                       style={{
                         ...styles.proposalVotingItemInnerLine,
                         backgroundColor: '#8463DF',
-                        width: `${(pool.scores[i] * 100) / pool.scores_total}%`,
+                        width: `${
+                          pool.scores_total && pool.scores_total !== 0
+                            ? (pool.scores[i] * 100) / pool.scores_total
+                            : null
+                        }%`,
                       }}
                     />
                   </View>
