@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import auth from '@react-native-firebase/auth'
 import {useMutation} from '@apollo/client'
@@ -26,7 +27,11 @@ const LoginScreen = ({navigation}: any) => {
       walletAddress: walletAddressInput,
     },
     onCompleted: ({data}) => {
-      navigation.navigate('MainScreen')
+      AsyncStorage.getItem('alreadyLaunched').then(launched =>
+        launched
+          ? navigation.navigate('MainScreen')
+          : navigation.navigate('WelcomeScreen'),
+      )
       setLoadingScreen(loading)
     },
     onError: error => {

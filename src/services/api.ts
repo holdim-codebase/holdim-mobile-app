@@ -55,6 +55,7 @@ export const handleHTTPError = () => {
   ])
 }
 
+// Mutations
 export const REGISTER_USER = gql`
   mutation RegisterUser($walletAddress: ID!) {
     registerUser(walletAddress: $walletAddress) {
@@ -64,6 +65,31 @@ export const REGISTER_USER = gql`
   }
 `
 
+export const FOLLOW_DAO = gql`
+  mutation FollowDao($daoId: ID!) {
+    followDao(daoId: $daoId) {
+      id
+      name
+      personalizedData {
+        followed
+      }
+    }
+  }
+`
+
+export const UNFOLLOW_DAO = gql`
+  mutation UnfollowDao($unfollowDaoDaoId2: ID!) {
+    unfollowDao(daoId: $unfollowDaoDaoId2) {
+      id
+      name
+      personalizedData {
+        followed
+      }
+    }
+  }
+`
+
+// Queries
 export const GET_PROPOSALS = gql`
   query GetProposals($onlyFollowedDaos: Boolean) {
     proposals(onlyFollowedDaos: $onlyFollowedDaos) {
@@ -172,30 +198,10 @@ export const GET_DAO_LIST = gql`
         name
         price
         symbol
-      }
-    }
-  }
-`
-
-export const FOLLOW_DAO = gql`
-  mutation FollowDao($daoId: ID!) {
-    followDao(daoId: $daoId) {
-      id
-      name
-      personalizedData {
-        followed
-      }
-    }
-  }
-`
-
-export const UNFOLLOW_DAO = gql`
-  mutation UnfollowDao($unfollowDaoDaoId2: ID!) {
-    unfollowDao(daoId: $unfollowDaoDaoId2) {
-      id
-      name
-      personalizedData {
-        followed
+        totalSupply
+        personalizedData {
+          quantity
+        }
       }
     }
   }
