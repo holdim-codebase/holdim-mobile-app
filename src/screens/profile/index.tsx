@@ -39,7 +39,7 @@ function ProfileScreen({navigation}: any) {
 
   const onRefresh = () => {
     setRefreshing(true)
-    refetchUserData()
+    refetchUserData({tokensOnlyMain2: true})
   }
 
   const validateUserTokens = (quantity: number) => {
@@ -53,6 +53,8 @@ function ProfileScreen({navigation}: any) {
   const validateUserUSD = (price: number, quantity: number) => {
     if (price * quantity >= 0.01) {
       return +Number(price * quantity).toFixed(2)
+    } else if (price * quantity === 0) {
+      return '0'
     } else {
       return '< 0.01'
     }
