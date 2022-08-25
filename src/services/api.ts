@@ -1,22 +1,12 @@
 import {Alert} from 'react-native'
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
-import {
-  ApolloClient,
-  ApolloLink,
-  createHttpLink,
-  gql,
-  InMemoryCache,
-} from '@apollo/client'
+import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client'
 import {setContext} from '@apollo/client/link/context'
 
-import {baseEndpoint, snapshotEndpoint} from '../config'
+import {baseEndpoint} from '../config'
 
 const baseHttpLink = createHttpLink({
   uri: baseEndpoint,
-})
-
-const snapshotHttpLink = createHttpLink({
-  uri: snapshotEndpoint,
 })
 
 const authLink = setContext(async (_, {headers}) => {
@@ -38,11 +28,7 @@ const authLink = setContext(async (_, {headers}) => {
 })
 
 export const client = new ApolloClient({
-  link: ApolloLink.split(
-    operation => operation.getContext().clientName === 'splashClient',
-    snapshotHttpLink,
-    authLink.concat(baseHttpLink),
-  ),
+  link: authLink.concat(baseHttpLink),
   cache: new InMemoryCache(),
 })
 
@@ -116,16 +102,18 @@ export const GET_DAO_PROPOSALS = gql`
   }
 `
 
-export const GET_POOL = gql`
-  query GetPool($daoId: String!) {
-    proposals(where: {id: $daoId}) {
+export const GET_POLL = gql`
+  query GetPoll($ids: [ID!], $onlyFollowedDaos: Boolean) {
+    proposals(ids: $ids, onlyFollowedDaos: $onlyFollowedDaos) {
       id
-      scores
-      choices
-      symbol
-      scores_total
-      votes
-      quorum
+      poll {
+        scores
+        choices
+        symbol
+        scores_total
+        votes
+        quorum
+      }
     }
   }
 `

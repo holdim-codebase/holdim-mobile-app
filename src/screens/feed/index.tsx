@@ -10,10 +10,10 @@ import {
 } from 'react-native'
 import numeral from 'numeral'
 import moment from 'moment'
-import {useLazyQuery, useQuery} from '@apollo/client'
+import {useQuery} from '@apollo/client'
 
-import {TProposal, TPool} from '../../types'
-import {GET_POOL, GET_PROPOSALS, handleHTTPError} from '../../services/api'
+import {TProposal, TPoll} from '../../types'
+import {GET_POLL, GET_PROPOSALS, handleHTTPError} from '../../services/api'
 import styles from './styles'
 
 export const convertURIForLogo = (logoURI: string) => {
@@ -25,7 +25,7 @@ export const convertURIForLogo = (logoURI: string) => {
 function FeedScreen({navigation}: any) {
   const [refreshing, setRefreshing] = React.useState(false)
   const [proposals, setProposals] = React.useState<TProposal[]>([])
-  const [pools, setPools] = React.useState<TPool[]>([])
+  const [polls, setPolls] = React.useState<TPoll[]>([])
   const dateNow = new Date()
 
   const {loading: loadingProposals, refetch: refetchGetProposals} = useQuery(
@@ -44,10 +44,10 @@ function FeedScreen({navigation}: any) {
     },
   )
 
-  const [getPool, {loading: loadingPool}] = useLazyQuery(GET_POOL, {
-    context: {clientName: 'splashClient'},
+  const {loading: loadingPoll} = useQuery(GET_POLL, {
+    variables: {onlyFollowedDaos: true},
     onCompleted: res => {
-      setPools(prevState => res.proposals && [...prevState, res.proposals[0]])
+      setPolls(res.proposals)
     },
     onError: error => {
       console.log(error)
@@ -55,18 +55,8 @@ function FeedScreen({navigation}: any) {
     },
   })
 
-  const openProposal = (proposal: TProposal, pool: TPool) => {
-    navigation.navigate('Proposal', {proposal, pool})
-  }
-
-  const getArrayWithPoolsForProposals = async (snapshotIds: string[]) => {
-    for await (const id of snapshotIds) {
-      await getPool({
-        variables: {
-          daoId: id,
-        },
-      })
-    }
+  const openProposal = (proposal: TProposal, poll?: TPoll) => {
+    navigation.navigate('Proposal', {proposal, poll})
   }
 
   const onRefresh = () => {
@@ -77,15 +67,6 @@ function FeedScreen({navigation}: any) {
   const openDAODescription = (daoId: string) => {
     navigation.navigate('DAO', {daoId})
   }
-
-  React.useEffect(() => {
-    if (proposals) {
-      const snapshotIds: string[] = []
-      proposals.forEach(proposal => snapshotIds.push(proposal.snapshotId))
-      setPools([])
-      getArrayWithPoolsForProposals(snapshotIds)
-    }
-  }, [proposals])
 
   return (
     <ScrollView
@@ -104,11 +85,11 @@ function FeedScreen({navigation}: any) {
         ? null
         : proposals &&
           proposals.map((item, i) => {
-            const pool = pools[i]
+            const poll = polls[i]
             return (
               <TouchableWithoutFeedback
                 key={i}
-                onPress={() => openProposal(item, pool)}>
+                onPress={() => openProposal(item, poll)}>
                 <View style={styles.proposalWrapper}>
                   <View style={styles.proposalImageWrapper}>
                     <TouchableWithoutFeedback
@@ -138,63 +119,70 @@ function FeedScreen({navigation}: any) {
                       )}
                     </Text>
                     <View style={styles.proposalVotingWrapper}>
-                      {loadingPool ? (
+                      {loadingPoll ? (
                         <View style={styles.loadingWrapper}>
                           <ActivityIndicator size="large" color="#8463DF" />
                         </View>
                       ) : (
-                        pool &&
-                        pool.choices &&
-                        pool.choices.map((choiceTitle: string, i: number) => {
-                          return (
-
-                            <View
-                              key={i}
-                              style={styles.proposalVotingItemWrapper}>
+                        poll &&
+                        poll.poll.choices &&
+                        poll.poll.choices.map(
+                          (choiceTitle: string, i: number) => {
+                            return (
                               <View
-                                style={styles.proposalVotingItemTextWrapper}>
-                                <Text style={styles.proposalVotingItemText}>
-                                  {choiceTitle}
-                                </Text>
-                                <Text style={styles.proposalVotingItemText}>
-                                  {numeral(pool.scores[i]).format('0[.]0a')}{' '}
-                                  {pool.symbol}
-                                  {'  '}
-                                  {
-                                    +(
-                                      (pool.scores[i] * 100) /
-                                      pool.scores_total
-                                    ).toFixed()
-                                  }
-                                  %
-                                </Text>
-                              </View>
-                              <View
-                                style={styles.proposalVotingItemBackgroundLine}>
+                                key={i}
+                                style={styles.proposalVotingItemWrapper}>
                                 <View
-                                  style={{
-                                    ...styles.proposalVotingItemInnerLine,
-                                    backgroundColor: '#8463DF',
-                                    width: `${
-                                      (pool.scores[i] * 100) / pool.scores_total
-                                    }%`,
-                                  }}
-                                />
+                                  style={styles.proposalVotingItemTextWrapper}>
+                                  <Text style={styles.proposalVotingItemText}>
+                                    {choiceTitle}
+                                  </Text>
+                                  <Text style={styles.proposalVotingItemText}>
+                                    {numeral(poll.poll.scores[i]).format(
+                                      '0[.]0a',
+                                    )}{' '}
+                                    {poll.poll.symbol}
+                                    {'  '}
+                                    {
+                                      +(
+                                        (poll.poll.scores[i] * 100) /
+                                        poll.poll.scores_total
+                                      ).toFixed()
+                                    }
+                                    %
+                                  </Text>
+                                </View>
+                                <View
+                                  style={
+                                    styles.proposalVotingItemBackgroundLine
+                                  }>
+                                  <View
+                                    style={{
+                                      ...styles.proposalVotingItemInnerLine,
+                                      backgroundColor: '#8463DF',
+                                      width: `${
+                                        (poll.poll.scores[i] * 100) /
+                                        poll.poll.scores_total
+                                      }%`,
+                                    }}
+                                  />
+                                </View>
                               </View>
-                            </View>
-                          )
-                        })
+                            )
+                          },
+                        )
                       )}
-                      {!loadingPool && pool && pool.quorum !== 0 && (
+                      {!loadingPoll && poll && poll.poll.quorum !== 0 && (
                         <View style={styles.proposalVotingItemTextWrapper}>
                           <Text style={styles.proposalVotingItemText}>
                             Quorum
                           </Text>
                           <Text style={styles.proposalVotingItemText}>
-                            {numeral(pool && pool.scores_total).format(
+                            {numeral(poll && poll.poll.scores_total).format(
                               '0[.]0a',
                             )}
-                            /{numeral(pool && pool.quorum).format('0[.]0a')}
+                            /
+                            {numeral(poll && poll.poll.quorum).format('0[.]0a')}
                           </Text>
                         </View>
                       )}
