@@ -123,9 +123,9 @@ function FeedScreen({navigation}: any) {
                         <View style={styles.loadingWrapper}>
                           <ActivityIndicator size="large" color="#8463DF" />
                         </View>
-                      ) : (
-                        poll &&
+                      ) : poll &&
                         poll.poll.choices &&
+                        poll.poll.choices.length !== 0 ? (
                         poll.poll.choices.map(
                           (choiceTitle: string, i: number) => {
                             return (
@@ -171,7 +171,7 @@ function FeedScreen({navigation}: any) {
                             )
                           },
                         )
-                      )}
+                      ) : null}
                       {!loadingPoll && poll && poll.poll.quorum !== 0 && (
                         <View style={styles.proposalVotingItemTextWrapper}>
                           <Text style={styles.proposalVotingItemText}>
