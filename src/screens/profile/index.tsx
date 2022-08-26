@@ -45,9 +45,8 @@ function ProfileScreen({navigation}: any) {
   const validateUserTokens = (quantity: number) => {
     if (quantity >= 0.01 || quantity === 0) {
       return +Number(quantity).toFixed(2)
-    } else {
-      return '0'
     }
+    return '0'
   }
 
   const validateUserUSD = (price: number, quantity: number) => {
@@ -55,9 +54,8 @@ function ProfileScreen({navigation}: any) {
       return +Number(price * quantity).toFixed(2)
     } else if (price * quantity === 0) {
       return '0'
-    } else {
-      return '< 0.01'
     }
+    return '< 0.01'
   }
 
   return (
