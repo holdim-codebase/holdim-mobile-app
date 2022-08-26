@@ -15,7 +15,7 @@ import {handleHTTPError, REGISTER_USER} from '../../services/api'
 import styles from './styles'
 
 // to validate wallet address and ens address
-const namehash = require('@ensdomains/eth-ens-namehash')
+import namehash from '@ensdomains/eth-ens-namehash'
 
 const LoginScreen = ({navigation}: any) => {
   const [walletAddressInput, onChangeWalletAddressInput] =
@@ -48,7 +48,9 @@ const LoginScreen = ({navigation}: any) => {
     setLoadingScreen(true)
     try {
       await auth().signInAnonymously()
-      await register({variables: {walletAddress: walletAddressInput}})
+      await register({
+        variables: {walletAddress: walletAddressInput.toLowerCase()},
+      })
       setLoadingScreen(false)
     } catch (e: any) {
       console.error(e)
