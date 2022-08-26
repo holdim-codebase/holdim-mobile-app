@@ -58,7 +58,6 @@ function ProposalScreen({route, navigation}: any) {
       : getPoll({
           variables: {
             ids: [proposal.id],
-            onlyFollowedDaos: true,
           },
         })
   }, [proposal])
@@ -168,11 +167,11 @@ function ProposalScreen({route, navigation}: any) {
                       {numeral(poll.poll.scores[i]).format('0[.]0a')}{' '}
                       {poll.poll.symbol}
                       {'  '}
-
-                      {pool.scores_total !== 0
-                        ? +((pool.scores[i] * 100) / pool.scores_total).toFixed(
-                            2,
-                          )
+                      {poll.poll.scores_total !== 0
+                        ? +(
+                            (poll.poll.scores[i] * 100) /
+                            poll.poll.scores_total
+                          ).toFixed(2)
                         : 0}
                       %
                     </Text>
@@ -183,9 +182,9 @@ function ProposalScreen({route, navigation}: any) {
                         ...styles.proposalVotingItemInnerLine,
                         backgroundColor: '#8463DF',
                         width: `${
-
-                          pool.scores_total && pool.scores_total !== 0
-                            ? (pool.scores[i] * 100) / pool.scores_total
+                          poll.poll.scores_total && poll.poll.scores_total !== 0
+                            ? (poll.poll.scores[i] * 100) /
+                              poll.poll.scores_total
                             : null
                         }%`,
                       }}

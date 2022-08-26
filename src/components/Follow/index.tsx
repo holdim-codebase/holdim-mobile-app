@@ -4,6 +4,7 @@ import {TouchableOpacity} from 'react-native'
 
 import {
   FOLLOW_DAO,
+  GET_DAO_DETAIL,
   GET_PROPOSALS,
   GET_USER_INFO,
   handleHTTPError,
