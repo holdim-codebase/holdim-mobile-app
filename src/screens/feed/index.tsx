@@ -147,7 +147,6 @@ function FeedScreen({navigation}: any) {
                         pool.choices &&
                         pool.choices.map((choiceTitle: string, i: number) => {
                           return (
-
                             <View
                               key={i}
                               style={styles.proposalVotingItemWrapper}>
@@ -160,12 +159,12 @@ function FeedScreen({navigation}: any) {
                                   {numeral(pool.scores[i]).format('0[.]0a')}{' '}
                                   {pool.symbol}
                                   {'  '}
-                                  {
-                                    +(
-                                      (pool.scores[i] * 100) /
-                                      pool.scores_total
-                                    ).toFixed()
-                                  }
+                                  {pool.scores_total !== 0
+                                    ? +(
+                                        (pool.scores[i] * 100) /
+                                        pool.scores_total
+                                      ).toFixed(2)
+                                    : 0}
                                   %
                                 </Text>
                               </View>
