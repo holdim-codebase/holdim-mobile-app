@@ -4,7 +4,6 @@ import {TouchableOpacity} from 'react-native'
 
 import {
   FOLLOW_DAO,
-  GET_DAO_DETAIL,
   GET_PROPOSALS,
   GET_USER_INFO,
   handleHTTPError,
@@ -15,14 +14,13 @@ import Like from '../../assets/images/svg/Like.svg'
 type FollowProps = {
   daoId: string
   userFollowed: boolean
+  color?: string
 }
 
-const Follow = ({daoId, userFollowed}: FollowProps) => {
+const Follow = ({daoId, userFollowed, color}: FollowProps) => {
   const [followed, setFollowed] = React.useState<boolean>(userFollowed)
-  const [color, setColor] = React.useState<string>(
-    userFollowed ? '#8463DF' : 'none',
-  )
 
+  // refetch querys that don't return the id of the dao that was changed
   const [followDao] = useMutation(FOLLOW_DAO, {
     onCompleted: res => {
       setFollowed(true)
@@ -38,6 +36,7 @@ const Follow = ({daoId, userFollowed}: FollowProps) => {
     ],
   })
 
+  // refetch querys that don't return the id of the dao that was changed
   const [unfollowDao] = useMutation(UNFOLLOW_DAO, {
     onCompleted: res => {
       setFollowed(false)
@@ -54,33 +53,30 @@ const Follow = ({daoId, userFollowed}: FollowProps) => {
   })
 
   React.useEffect(() => {
-    setColor(userFollowed ? '#8463DF' : 'none')
+    setFollowed(userFollowed)
   }, [userFollowed])
 
-  const followUnfollow = () => {
-    if (daoId && followed) {
-      unfollowDao({
+  const handleClick = async () => {
+    if (followed) {
+      setFollowed(false)
+      await unfollowDao({
         variables: {
           unfollowDaoDaoId2: daoId,
         },
       })
-      setColor('none')
     } else {
-      followDao({
+      setFollowed(true)
+      await followDao({
         variables: {
           daoId: daoId,
         },
       })
-      setColor('#8463DF')
     }
   }
 
   return (
-    <TouchableOpacity
-      onPress={() => {
-        followUnfollow()
-      }}>
-      <Like fill={color} />
+    <TouchableOpacity onPress={handleClick}>
+      <Like fill={color ? color : followed ? '#8463DF' : 'none'} />
     </TouchableOpacity>
   )
 }

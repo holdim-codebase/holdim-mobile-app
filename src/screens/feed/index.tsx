@@ -132,6 +132,7 @@ function FeedScreen({navigation}: any) {
                               <View
                                 key={i}
                                 style={styles.proposalVotingItemWrapper}>
+
                                 <View
                                   style={styles.proposalVotingItemTextWrapper}>
                                   <Text style={styles.proposalVotingItemText}>

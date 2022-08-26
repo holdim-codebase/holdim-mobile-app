@@ -168,12 +168,12 @@ function ProposalScreen({route, navigation}: any) {
                       {numeral(poll.poll.scores[i]).format('0[.]0a')}{' '}
                       {poll.poll.symbol}
                       {'  '}
-                      {
-                        +(
-                          (poll.poll.scores[i] * 100) /
-                          poll.poll.scores_total
-                        ).toFixed()
-                      }
+
+                      {pool.scores_total !== 0
+                        ? +((pool.scores[i] * 100) / pool.scores_total).toFixed(
+                            2,
+                          )
+                        : 0}
                       %
                     </Text>
                   </View>
@@ -183,7 +183,10 @@ function ProposalScreen({route, navigation}: any) {
                         ...styles.proposalVotingItemInnerLine,
                         backgroundColor: '#8463DF',
                         width: `${
-                          (poll.poll.scores[i] * 100) / poll.poll.scores_total
+
+                          pool.scores_total && pool.scores_total !== 0
+                            ? (pool.scores[i] * 100) / pool.scores_total
+                            : null
                         }%`,
                       }}
                     />
