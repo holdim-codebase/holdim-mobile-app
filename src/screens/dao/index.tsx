@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   TouchableWithoutFeedback,
+  NativeScrollEvent,
 } from 'react-native'
 import {useLazyQuery, useQuery} from '@apollo/client'
 import moment from 'moment'
@@ -12,7 +13,7 @@ import moment from 'moment'
 import {TDAO, TProposal} from '../../types'
 import {
   GET_DAO_DETAIL,
-  GET_DAO_PROPOSALS,
+  GET_PROPOSALS,
   handleHTTPError,
 } from '../../services/api'
 import {convertURIForLogo} from '../feed'
@@ -33,32 +34,11 @@ function DAOScreen({route, navigation}: any) {
   const [proposals, setProposals] = React.useState<TProposal[]>([])
   const [activeTab, setActiveTab] = React.useState<string>(overviewTab)
 
-  useQuery(GET_DAO_DETAIL, {
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      ids: [route.params.daoId],
-      onlyMain: true,
-    },
-    onCompleted: res => {
-      setDao(res.daos[0])
-    },
-    onError: error => {
-      console.log(error)
-      handleHTTPError()
-    },
-  })
+  // states for pagination
+  const [endCursor, setEndCursor] = React.useState<string>('')
+  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false)
 
-  const [getDaoProposals] = useLazyQuery(GET_DAO_PROPOSALS, {
-    fetchPolicy: 'cache-and-network',
-    onCompleted: res => {
-      filterProposals(res.proposals)
-    },
-    onError: error => {
-      console.log(error)
-      handleHTTPError()
-    },
-  })
-
+  // filter proposals to show active first
   const filterProposals = (allProposals: TProposal[]) => {
     const active: TProposal[] = []
     const passed: TProposal[] = []
@@ -69,15 +49,59 @@ function DAOScreen({route, navigation}: any) {
     setProposals(active.concat(passed))
   }
 
+  useQuery(GET_DAO_DETAIL, {
+    variables: {
+      ids: [route.params.daoId],
+      onlyMain: true,
+    },
+    onCompleted: res => {
+      setDao(res.daosV2.edges[0].node)
+    },
+    onError: error => {
+      console.log(error)
+      handleHTTPError()
+    },
+  })
+
+  const [getDaoProposals, {fetchMore}] = useLazyQuery(GET_PROPOSALS, {
+    fetchPolicy: 'cache-and-network',
+    onCompleted: res => {
+      filterProposals(
+        res.proposalsV2.edges.map((edge: {node: any}) => edge.node),
+      )
+      setEndCursor(res.proposalsV2.pageInfo.endCursor)
+      setHasNextPage(res.proposalsV2.pageInfo.hasNextPage)
+    },
+    onError: error => {
+      console.log(error)
+      handleHTTPError()
+    },
+  })
+
   const openProposal = (proposal: TProposal) => {
     navigation.navigate('Proposal', {proposal})
   }
 
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }: NativeScrollEvent) => {
+    const paddingToBottom = 20
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    )
+  }
+
+  // when dao is ready get dao proposals
   React.useEffect(() => {
-    dao && getDaoProposals({variables: {daoIds: [dao.id]}})
+    console.log(dao)
+    dao &&
+      getDaoProposals({variables: {first: 10, after: '', daoIds: [dao.id]}})
   }, [dao])
 
-  return dao ? (
+  return dao !== undefined ? (
     <View style={styles.daoWrapper}>
       <View style={styles.daoInfoWrapper}>
         <Image
@@ -138,18 +162,29 @@ function DAOScreen({route, navigation}: any) {
           </View>
         </TouchableWithoutFeedback>
       </View>
-      <ScrollView>
-        {activeTab === overviewTab ? (
-          <View style={styles.daoOverviewWrapper}>
-            <MarkdownText text={dao.overview} />
-          </View>
-        ) : null}
-        {activeTab === tokenTab ? (
-          <View style={styles.daoTokenWrapper}>
-            <MarkdownText text={dao.tokenOverview} />
-          </View>
-        ) : null}
-        {activeTab === proposalsTab ? (
+
+      {activeTab === overviewTab ? (
+        <ScrollView style={styles.daoOverviewWrapper}>
+          <MarkdownText text={dao.overview} />
+        </ScrollView>
+      ) : null}
+      {activeTab === tokenTab ? (
+        <ScrollView style={styles.daoTokenWrapper}>
+          <MarkdownText text={dao.tokenOverview} />
+        </ScrollView>
+      ) : null}
+      {activeTab === proposalsTab ? (
+        <ScrollView
+          onScroll={({nativeEvent}) => {
+            if (isCloseToBottom(nativeEvent)) {
+              if (hasNextPage) {
+                fetchMore({
+                  variables: {first: 10, after: endCursor, daoIds: [dao.id]},
+                })
+              }
+            }
+          }}
+          scrollEventThrottle={400}>
           <View style={styles.daoProposalsWrapper}>
             {proposals.map((proposal, i) => {
               return (
@@ -192,8 +227,8 @@ function DAOScreen({route, navigation}: any) {
               )
             })}
           </View>
-        ) : null}
-      </ScrollView>
+        </ScrollView>
+      ) : null}
     </View>
   ) : null
 }

@@ -35,8 +35,9 @@ function ProposalScreen({route, navigation}: any) {
   )
 
   const [getPoll, {loading: loadingpoll}] = useLazyQuery(GET_POLL, {
+    fetchPolicy: 'no-cache',
     onCompleted: res => {
-      setPoll(res.proposals[0])
+      setPoll(res.proposalsV2.edges[0].node)
     },
     onError: error => {
       console.log(error)
@@ -57,6 +58,9 @@ function ProposalScreen({route, navigation}: any) {
       ? setPoll(route.params.poll)
       : getPoll({
           variables: {
+            first: 1,
+            after: '',
+            onlyFollowedDaos: false,
             ids: [proposal.id],
           },
         })

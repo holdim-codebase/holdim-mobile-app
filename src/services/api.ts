@@ -2,11 +2,25 @@ import {Alert} from 'react-native'
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
 import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client'
 import {setContext} from '@apollo/client/link/context'
+import {relayStylePagination} from '@apollo/client/utilities'
 
 import {baseEndpoint} from '../config'
 
 const baseHttpLink = createHttpLink({
   uri: baseEndpoint,
+})
+
+// added keyArgs (['daoIds'], ['ids']) to relayStylePagination()
+// to save data in diff arrays when doing requests with/without daoIds
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        proposalsV2: relayStylePagination(['daoIds', 'ids']),
+        daosV2: relayStylePagination(['ids']),
+      },
+    },
+  },
 })
 
 const authLink = setContext(async (_, {headers}) => {
@@ -29,7 +43,7 @@ const authLink = setContext(async (_, {headers}) => {
 
 export const client = new ApolloClient({
   link: authLink.concat(baseHttpLink),
-  cache: new InMemoryCache(),
+  cache,
 })
 
 // TODO add more variants for each type of error
@@ -77,119 +91,141 @@ export const UNFOLLOW_DAO = gql`
 
 // Queries
 export const GET_PROPOSALS = gql`
-  query GetProposals($onlyFollowedDaos: Boolean) {
-    proposals(onlyFollowedDaos: $onlyFollowedDaos) {
-      id
-      snapshotId
-      title
-      dao {
-        id
-        name
-        logo
-        personalizedData {
-          followed
-        }
+  query GetProposals(
+    $first: Int
+    $after: String
+    $onlyFollowedDaos: Boolean
+    $daoIds: [ID!]
+  ) {
+    proposalsV2(
+      first: $first
+      after: $after
+      onlyFollowedDaos: $onlyFollowedDaos
+      daoIds: $daoIds
+    ) {
+      totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
       }
-      juniorDescription
-      middleDescription
-      seniorDescription
-      startAt
-      endAt
-      author
-      snapshotLink
-      discussionLink
-    }
-  }
-`
-
-export const GET_DAO_PROPOSALS = gql`
-  query GetDaoProposals($daoIds: [ID!]) {
-    proposals(daoIds: $daoIds) {
-      id
-      snapshotId
-      title
-      dao {
-        id
-        name
-        logo
-        personalizedData {
-          followed
+      edges {
+        node {
+          id
+          snapshotId
+          title
+          dao {
+            id
+            name
+            logo
+            personalizedData {
+              followed
+            }
+          }
+          juniorDescription
+          middleDescription
+          seniorDescription
+          startAt
+          endAt
+          author
+          snapshotLink
+          discussionLink
         }
+        cursor
       }
-      juniorDescription
-      middleDescription
-      seniorDescription
-      startAt
-      endAt
-      author
-      snapshotLink
-      discussionLink
     }
   }
 `
 
 export const GET_POLL = gql`
-  query GetPoll($ids: [ID!], $onlyFollowedDaos: Boolean) {
-    proposals(ids: $ids, onlyFollowedDaos: $onlyFollowedDaos) {
-      id
-      poll {
-        scores
-        choices
-        symbol
-        scores_total
-        votes
-        quorum
+  query GetPoll(
+    $first: Int
+    $after: String
+    $onlyFollowedDaos: Boolean
+    $ids: [ID!]
+  ) {
+    proposalsV2(
+      first: $first
+      after: $after
+      onlyFollowedDaos: $onlyFollowedDaos
+      ids: $ids
+    ) {
+      edges {
+        node {
+          poll {
+            scores
+            choices
+            symbol
+            scores_total
+            votes
+            quorum
+          }
+          id
+        }
+        cursor
       }
     }
   }
 `
 
 export const GET_DAO_DETAIL = gql`
-  query GetDAOs($ids: [ID!], $onlyMain: Boolean) {
-    daos(ids: $ids) {
-      id
-      snapshotId
-      name
-      logo
-      overview
-      tokenOverview
-      tokens(onlyMain: $onlyMain) {
-        id
-        name
-        marketCap
-        totalSupply
-        price
-        personalizedData {
-          quantity
+  query GetDAOs($onlyMain: Boolean, $ids: [ID!]) {
+    daosV2(ids: $ids) {
+      edges {
+        node {
+          id
+          snapshotId
+          name
+          logo
+          overview
+          tokenOverview
+          tokens(onlyMain: $onlyMain) {
+            id
+            name
+            marketCap
+            totalSupply
+            price
+            personalizedData {
+              quantity
+            }
+            symbol
+          }
+          personalizedData {
+            followed
+          }
         }
-        symbol
-      }
-      personalizedData {
-        followed
       }
     }
   }
 `
 
 export const GET_DAO_LIST = gql`
-  query GetDAOs($ids: [ID!], $onlyMain: Boolean) {
-    daos(ids: $ids) {
-      id
-      snapshotId
-      name
-      logo
-      personalizedData {
-        followed
+  query GetDAOs($first: Int, $after: String, $onlyMain: Boolean) {
+    daosV2(first: $first, after: $after) {
+      pageInfo {
+        endCursor
+        hasNextPage
       }
-      tokens(onlyMain: $onlyMain) {
-        id
-        name
-        price
-        symbol
-        totalSupply
-        personalizedData {
-          quantity
+      edges {
+        node {
+          id
+          snapshotId
+          name
+          logo
+          personalizedData {
+            followed
+          }
+          tokens(onlyMain: $onlyMain) {
+            id
+            name
+            price
+            symbol
+            totalSupply
+            personalizedData {
+              quantity
+            }
+          }
         }
+        cursor
       }
     }
   }

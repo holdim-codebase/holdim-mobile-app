@@ -7,8 +7,8 @@ import {
   GET_DAO_DETAIL,
   GET_PROPOSALS,
   GET_USER_INFO,
-  handleHTTPError,
   UNFOLLOW_DAO,
+  handleHTTPError,
 } from '../../services/api'
 import Like from '../../assets/images/svg/Like.svg'
 
@@ -32,8 +32,14 @@ const Follow = ({daoId, userFollowed, color}: FollowProps) => {
     },
     refetchQueries: [
       {query: GET_USER_INFO, variables: {onlyMain: true}},
-      {query: GET_PROPOSALS, variables: {onlyFollowedDaos: true}},
-      {query: GET_DAO_DETAIL, variables: {ids: daoId, onlyMain: true}},
+      {
+        query: GET_PROPOSALS,
+        variables: {first: 5, after: '', onlyFollowedDaos: true},
+      },
+      {
+        query: GET_DAO_DETAIL,
+        variables: {ids: [daoId], onlyMain: true},
+      },
     ],
   })
 
@@ -48,8 +54,14 @@ const Follow = ({daoId, userFollowed, color}: FollowProps) => {
     },
     refetchQueries: [
       {query: GET_USER_INFO, variables: {onlyMain: true}},
-      {query: GET_PROPOSALS, variables: {onlyFollowedDaos: true}},
-      {query: GET_DAO_DETAIL, variables: {ids: daoId, onlyMain: true}},
+      {
+        query: GET_PROPOSALS,
+        variables: {first: 5, after: '', onlyFollowedDaos: true},
+      },
+      {
+        query: GET_DAO_DETAIL,
+        variables: {ids: [daoId], onlyMain: true},
+      },
     ],
   })
 
