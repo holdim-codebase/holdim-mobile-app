@@ -73,7 +73,9 @@ function ProfileScreen({navigation}: any) {
             />
             <View style={styles.profileInfoTextWrapper}>
               <Text style={styles.profileName}>
-                {shortenAddress(portfolio.wallet.address)}
+                {portfolio.wallet.ens
+                  ? shortenAddress(portfolio.wallet.ens)
+                  : shortenAddress(portfolio.wallet.address)}
               </Text>
               <Text style={styles.profilePortfolioAmount}>
                 You govern: {portfolio.followedDaos.length} DAOs

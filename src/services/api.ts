@@ -214,6 +214,7 @@ export const GET_USER_INFO = gql`
       avatarUrl
       wallet {
         address
+        ens
         tokens {
           personalizedData {
             quantity
