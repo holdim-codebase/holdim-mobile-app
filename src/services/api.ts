@@ -30,26 +30,14 @@ const authLink = setContext(async (_, {headers}) => {
       await user.getIdTokenResult(true)
     console.log(idTokenResult.token)
 
-    if (walletId) {
-      return {
-        headers: {
-          ...headers,
-          Authorization: idTokenResult.token
-            ? `Bearer ${idTokenResult.token}`
-            : '',
-          'wallet-id': walletId,
-        },
-      }
-    } else {
-      // first request
-      return {
-        headers: {
-          ...headers,
-          Authorization: idTokenResult.token
-            ? `Bearer ${idTokenResult.token}`
-            : '',
-        },
-      }
+    return {
+      headers: {
+        ...headers,
+        Authorization: idTokenResult.token
+          ? `Bearer ${idTokenResult.token}`
+          : '',
+        'wallet-id': walletId || '',
+      },
     }
   }
 })
