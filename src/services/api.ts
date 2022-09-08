@@ -10,6 +10,7 @@ import {
 import {setContext} from '@apollo/client/link/context'
 
 import {baseEndpoint, snapshotEndpoint} from '../config'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const baseHttpLink = createHttpLink({
   uri: baseEndpoint,
@@ -22,17 +23,33 @@ const snapshotHttpLink = createHttpLink({
 const authLink = setContext(async (_, {headers}) => {
   const user: FirebaseAuthTypes.User | null = auth().currentUser
 
+  const walletId = await AsyncStorage.getItem('wallet-id')
+
   if (user) {
     const idTokenResult: FirebaseAuthTypes.IdTokenResult =
       await user.getIdTokenResult(true)
     console.log(idTokenResult.token)
-    return {
-      headers: {
-        ...headers,
-        Authorization: idTokenResult.token
-          ? `Bearer ${idTokenResult.token}`
-          : '',
-      },
+
+    if (walletId) {
+      return {
+        headers: {
+          ...headers,
+          Authorization: idTokenResult.token
+            ? `Bearer ${idTokenResult.token}`
+            : '',
+          'wallet-id': walletId,
+        },
+      }
+    } else {
+      // first request
+      return {
+        headers: {
+          ...headers,
+          Authorization: idTokenResult.token
+            ? `Bearer ${idTokenResult.token}`
+            : '',
+        },
+      }
     }
   }
 })
@@ -60,7 +77,9 @@ export const REGISTER_USER = gql`
   mutation RegisterUser($walletAddress: ID!) {
     registerUser(walletAddress: $walletAddress) {
       id
-      walletAddress
+      wallets {
+        id
+      }
     }
   }
 `
