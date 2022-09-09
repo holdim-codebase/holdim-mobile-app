@@ -2,6 +2,7 @@ import {Alert} from 'react-native'
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
 import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client'
 import {setContext} from '@apollo/client/link/context'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {baseEndpoint} from '../config'
 
@@ -12,16 +13,20 @@ const baseHttpLink = createHttpLink({
 const authLink = setContext(async (_, {headers}) => {
   const user: FirebaseAuthTypes.User | null = auth().currentUser
 
+  const walletId = await AsyncStorage.getItem('wallet-id')
+
   if (user) {
     const idTokenResult: FirebaseAuthTypes.IdTokenResult =
       await user.getIdTokenResult(true)
     console.log(idTokenResult.token)
+
     return {
       headers: {
         ...headers,
         Authorization: idTokenResult.token
           ? `Bearer ${idTokenResult.token}`
           : '',
+        'wallet-id': walletId || '',
       },
     }
   }
@@ -46,7 +51,9 @@ export const REGISTER_USER = gql`
   mutation RegisterUser($walletAddress: ID!) {
     registerUser(walletAddress: $walletAddress) {
       id
-      walletAddress
+      wallets {
+        id
+      }
     }
   }
 `

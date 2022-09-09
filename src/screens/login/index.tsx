@@ -29,7 +29,9 @@ const LoginScreen = ({navigation}: any) => {
     variables: {
       walletAddress: walletAddressInput,
     },
-    onCompleted: ({data}) => {
+    onCompleted: data => {
+      data.registerUser.wallets.length !== 0 &&
+        AsyncStorage.setItem('wallet-id', data.registerUser.wallets[0].id)
       AsyncStorage.getItem('alreadyLaunched').then(launched =>
         launched
           ? navigation.navigate('MainScreen')
