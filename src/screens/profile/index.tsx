@@ -28,7 +28,7 @@ function ProfileScreen({navigation}: any) {
       setRefreshing(false)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })
@@ -39,23 +39,23 @@ function ProfileScreen({navigation}: any) {
 
   const onRefresh = () => {
     setRefreshing(true)
-    refetchUserData()
+    refetchUserData({tokensOnlyMain2: true})
   }
 
   const validateUserTokens = (quantity: number) => {
     if (quantity >= 0.01 || quantity === 0) {
       return +Number(quantity).toFixed(2)
-    } else {
-      return '0'
     }
+    return '0'
   }
 
   const validateUserUSD = (price: number, quantity: number) => {
     if (price * quantity >= 0.01) {
       return +Number(price * quantity).toFixed(2)
-    } else {
-      return '< 0.01'
+    } else if (price * quantity === 0) {
+      return '0'
     }
+    return '< 0.01'
   }
 
   return (
@@ -73,7 +73,9 @@ function ProfileScreen({navigation}: any) {
             />
             <View style={styles.profileInfoTextWrapper}>
               <Text style={styles.profileName}>
-                {shortenAddress(portfolio.wallet.address)}
+                {portfolio.wallet.ens
+                  ? shortenAddress(portfolio.wallet.ens)
+                  : shortenAddress(portfolio.wallet.address)}
               </Text>
               <Text style={styles.profilePortfolioAmount}>
                 You govern: {portfolio.followedDaos.length} DAOs

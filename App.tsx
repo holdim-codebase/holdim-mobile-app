@@ -26,6 +26,7 @@ import ProfileIcon from './src/assets/images/svg/Profile.gray.svg'
 import FeedIconFocused from './src/assets/images/svg/Home.purple.svg'
 import SearchIconFocused from './src/assets/images/svg/Search.purple.svg'
 import ProfileIconFocused from './src/assets/images/svg/Profile.purple.svg'
+import WelcomeScreen from './src/screens/welcome'
 
 const tabIconSizeMultiplier = 0.9
 
@@ -243,17 +244,20 @@ export default function App() {
         />
         <NavigationContainer theme={navTheme}>
           {isFirstLaunch && (
-            <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Navigator
+              screenOptions={{headerShown: false, gestureEnabled: false}}>
               <Stack.Screen
                 name="OnboardingScreen"
                 component={OnboardingScreen}
               />
               <Stack.Screen name="LoginScreen" component={LoginScreen} />
+              <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
               <Stack.Screen name="MainScreen" component={MainScreen} />
             </Stack.Navigator>
           )}
           {!isFirstLaunch && !alreadyLoggedIn && (
-            <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Navigator
+              screenOptions={{headerShown: false, gestureEnabled: false}}>
               <Stack.Screen name="LoginScreen" component={LoginScreen} />
               <Stack.Screen name="MainScreen" component={MainScreen} />
             </Stack.Navigator>

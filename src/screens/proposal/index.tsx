@@ -12,8 +12,8 @@ import moment from 'moment'
 import numeral from 'numeral'
 import {useLazyQuery} from '@apollo/client'
 
-import {TPool, TProposal} from '../../types'
-import {GET_POOL, handleHTTPError} from '../../services/api'
+import {TPoll, TProposal} from '../../types'
+import {GET_POLL, handleHTTPError} from '../../services/api'
 import {convertURIForLogo} from '../feed'
 import {openLinkInAppBrowser} from '../../components/MarkdownText'
 import Link from '../../assets/images/svg/Link.svg'
@@ -29,20 +29,18 @@ export const shortenAddress = (address: string) => {
 }
 
 function ProposalScreen({route, navigation}: any) {
-  const [proposal, setProposal] = React.useState<TProposal>(
-    route.params.proposal,
-  )
-  const [pool, setPool] = React.useState<TPool>(
-    route.params.pool ? route.params.pool : null,
+  const [proposal] = React.useState<TProposal>(route.params.proposal)
+  const [poll, setPoll] = React.useState<TPoll>(
+    route.params.poll ? route.params.poll : null,
   )
 
-  const [getPool, {loading: loadingPool}] = useLazyQuery(GET_POOL, {
-    context: {clientName: 'splashClient'},
+  const [getPoll, {loading: loadingpoll}] = useLazyQuery(GET_POLL, {
+    fetchPolicy: 'no-cache',
     onCompleted: res => {
-      setPool(res.proposals[0])
+      setPoll(res.proposalsV2.edges[0].node)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })
@@ -56,16 +54,16 @@ function ProposalScreen({route, navigation}: any) {
   }
 
   React.useEffect(() => {
-    if (route.params.proposal && route.params.pool) {
-      setProposal(route.params.proposal)
-      setPool(route.params.pool)
-    } else {
-      getPool({
-        variables: {
-          daoId: proposal.snapshotId,
-        },
-      })
-    }
+    route.params.poll
+      ? setPoll(route.params.poll)
+      : getPoll({
+          variables: {
+            first: 1,
+            after: '',
+            onlyFollowedDaos: false,
+            ids: [proposal.id],
+          },
+        })
   }, [proposal])
 
   return (
@@ -152,26 +150,34 @@ function ProposalScreen({route, navigation}: any) {
             </View>
             <View style={styles.proposalMeta}>
               <Text style={styles.proposalMetaTitle}>Total voters:</Text>
-              <Text style={styles.proposalMetaInfo}>{pool && pool.votes}</Text>
+              <Text style={styles.proposalMetaInfo}>
+                {poll && poll.poll.votes}
+              </Text>
             </View>
           </View>
           <View style={styles.proposalVotingWrapper}>
-            {loadingPool ? (
+            {loadingpoll ? (
               <View style={styles.loadingWrapper}>
                 <ActivityIndicator size="large" color="#8463DF" />
               </View>
-            ) : (
-              pool &&
-              pool.choices.map((choiceTitle: string, i: number) => (
+            ) : poll && poll.poll.choices && poll.poll.choices.length !== 0 ? (
+              poll.poll.choices.map((choiceTitle: string, i: number) => (
                 <View key={i} style={styles.proposalVotingItemWrapper}>
                   <View style={styles.proposalVotingItemTextWrapper}>
                     <Text style={styles.proposalVotingItemText}>
                       {choiceTitle}
                     </Text>
                     <Text style={styles.proposalVotingItemText}>
-                      {numeral(pool.scores[i]).format('0[.]0a')} {pool.symbol}
+                      {numeral(poll.poll.scores[i]).format('0[.]0a')}{' '}
+                      {poll.poll.symbol}
                       {'  '}
-                      {+((pool.scores[i] * 100) / pool.scores_total).toFixed()}%
+                      {poll.poll.scores_total !== 0
+                        ? +(
+                            (poll.poll.scores[i] * 100) /
+                            poll.poll.scores_total
+                          ).toFixed(2)
+                        : 0}
+                      %
                     </Text>
                   </View>
                   <View style={styles.proposalVotingItemBackgroundLine}>
@@ -179,19 +185,24 @@ function ProposalScreen({route, navigation}: any) {
                       style={{
                         ...styles.proposalVotingItemInnerLine,
                         backgroundColor: '#8463DF',
-                        width: `${(pool.scores[i] * 100) / pool.scores_total}%`,
+                        width: `${
+                          poll.poll.scores_total && poll.poll.scores_total !== 0
+                            ? (poll.poll.scores[i] * 100) /
+                              poll.poll.scores_total
+                            : null
+                        }%`,
                       }}
                     />
                   </View>
                 </View>
               ))
-            )}
-            {pool && pool.quorum !== 0 && (
+            ) : null}
+            {poll && poll.poll.quorum !== 0 && (
               <View style={styles.proposalVotingItemTextWrapper}>
                 <Text style={styles.proposalVotingItemText}>Quorum</Text>
                 <Text style={styles.proposalVotingItemText}>
-                  {numeral(pool && pool.scores_total).format('0[.]0a')}/
-                  {numeral(pool && pool.quorum).format('0[.]0a')}
+                  {numeral(poll && poll.poll.scores_total).format('0[.]0a')}/
+                  {numeral(poll && poll.poll.quorum).format('0[.]0a')}
                 </Text>
               </View>
             )}

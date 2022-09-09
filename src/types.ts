@@ -18,14 +18,16 @@ export type TProposal = {
   discussionLink: string
 }
 
-export type TPool = {
+export type TPoll = {
   id: string
-  scores: number[]
-  choices: string[]
-  symbol: string
-  scores_total: number
-  votes: number
-  quorum: number
+  poll: {
+    scores: number[]
+    choices: string[]
+    symbol: string
+    scores_total: number
+    votes: number
+    quorum: number
+  }
 }
 
 export type TDAO = {
@@ -56,6 +58,7 @@ export type TUser = {
   avatarUrl: string
   wallet: {
     address: string
+    ens: string
     tokens: [
       {
         personalizedData: {

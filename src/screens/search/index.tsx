@@ -2,6 +2,7 @@ import * as React from 'react'
 import {
   ActivityIndicator,
   Image,
+  NativeScrollEvent,
   ScrollView,
   Text,
   TouchableWithoutFeedback,
@@ -9,7 +10,6 @@ import {
 } from 'react-native'
 import {useQuery} from '@apollo/client'
 import SearchBar from 'react-native-dynamic-search-bar'
-import numeral from 'numeral'
 
 import {TDAO} from '../../types'
 import {GET_DAO_LIST, handleHTTPError} from '../../services/api'
@@ -21,16 +21,24 @@ function SearchScreen({navigation}: any) {
   const [daoListAll, setDaoListAll] = React.useState<TDAO[]>([])
   const [daoList, setDaoList] = React.useState<TDAO[]>([])
 
-  const {loading: loadingDaoList} = useQuery(GET_DAO_LIST, {
+  // states for pagination
+  const [endCursor, setEndCursor] = React.useState<string>('')
+  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false)
+
+  const {loading: loadingDaoList, fetchMore} = useQuery(GET_DAO_LIST, {
     variables: {
+      first: 15,
+      after: '',
       onlyMain: true,
     },
     onCompleted: res => {
-      setDaoListAll(res.daos)
-      setDaoList(res.daos)
+      setDaoListAll(res.daosV2.edges.map((edge: {node: any}) => edge.node))
+      setDaoList(res.daosV2.edges.map((edge: {node: any}) => edge.node))
+      setEndCursor(res.daosV2.pageInfo.endCursor)
+      setHasNextPage(res.daosV2.pageInfo.hasNextPage)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })
@@ -50,6 +58,18 @@ function SearchScreen({navigation}: any) {
     navigation.navigate('DAO', {daoId})
   }
 
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }: NativeScrollEvent) => {
+    const paddingToBottom = 15
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    )
+  }
+
   return (
     <View style={styles.searchWrapper}>
       <SearchBar
@@ -67,7 +87,18 @@ function SearchScreen({navigation}: any) {
           <ActivityIndicator size="large" color="#8463DF" />
         </View>
       ) : (
-        <ScrollView style={styles.searchListWrapper}>
+        <ScrollView
+          style={styles.searchListWrapper}
+          onScroll={({nativeEvent}) => {
+            if (isCloseToBottom(nativeEvent)) {
+              if (hasNextPage) {
+                fetchMore({
+                  variables: {first: 20, after: endCursor, onlyMain: true},
+                })
+              }
+            }
+          }}
+          scrollEventThrottle={400}>
           {daoList.length !== 0 ? (
             daoList.map((dao, i) => {
               return (
