@@ -40,7 +40,7 @@ function ProposalScreen({route, navigation}: any) {
       setPoll(res.proposalsV2.edges[0].node)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })

@@ -48,7 +48,7 @@ function FeedScreen({navigation}: any) {
       setRefreshing(false)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })
@@ -61,7 +61,7 @@ function FeedScreen({navigation}: any) {
       setPolls(res.proposalsV2.edges.map((edge: {node: any}) => edge.node))
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })
@@ -84,7 +84,7 @@ function FeedScreen({navigation}: any) {
     contentOffset,
     contentSize,
   }: NativeScrollEvent) => {
-    const paddingToBottom = 20
+    const paddingToBottom = 500
     return (
       layoutMeasurement.height + contentOffset.y >=
       contentSize.height - paddingToBottom

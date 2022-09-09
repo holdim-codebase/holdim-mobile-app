@@ -27,7 +27,7 @@ const Follow = ({daoId, userFollowed, color}: FollowProps) => {
       setFollowed(true)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
     refetchQueries: [
@@ -49,7 +49,7 @@ const Follow = ({daoId, userFollowed, color}: FollowProps) => {
       setFollowed(false)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
     refetchQueries: [

@@ -58,7 +58,7 @@ function DAOScreen({route, navigation}: any) {
       setDao(res.daosV2.edges[0].node)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })
@@ -73,7 +73,7 @@ function DAOScreen({route, navigation}: any) {
       setHasNextPage(res.proposalsV2.pageInfo.hasNextPage)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })
@@ -96,12 +96,11 @@ function DAOScreen({route, navigation}: any) {
 
   // when dao is ready get dao proposals
   React.useEffect(() => {
-    console.log(dao)
     dao &&
       getDaoProposals({variables: {first: 10, after: '', daoIds: [dao.id]}})
   }, [dao])
 
-  return dao !== undefined ? (
+  return dao ? (
     <View style={styles.daoWrapper}>
       <View style={styles.daoInfoWrapper}>
         <Image

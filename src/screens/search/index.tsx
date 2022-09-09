@@ -38,7 +38,7 @@ function SearchScreen({navigation}: any) {
       setHasNextPage(res.daosV2.pageInfo.hasNextPage)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })

@@ -45,7 +45,7 @@ const WelcomeScreen = ({navigation}: any) => {
       filterAllDaos(res.daos)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })

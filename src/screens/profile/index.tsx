@@ -28,7 +28,7 @@ function ProfileScreen({navigation}: any) {
       setRefreshing(false)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       handleHTTPError()
     },
   })
