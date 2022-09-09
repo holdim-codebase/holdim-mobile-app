@@ -15,6 +15,9 @@ import {useMutation} from '@apollo/client'
 import {handleHTTPError, REGISTER_USER} from '../../services/api'
 import styles from './styles'
 
+// to validate wallet address and ens address
+import namehash from '@ensdomains/eth-ens-namehash'
+
 const LoginScreen = ({navigation}: any) => {
   const [walletAddressInput, onChangeWalletAddressInput] =
     React.useState<string>()
@@ -26,7 +29,9 @@ const LoginScreen = ({navigation}: any) => {
     variables: {
       walletAddress: walletAddressInput,
     },
-    onCompleted: ({data}) => {
+    onCompleted: data => {
+      data.registerUser.wallets.length !== 0 &&
+        AsyncStorage.setItem('wallet-id', data.registerUser.wallets[0].id)
       AsyncStorage.getItem('alreadyLaunched').then(launched =>
         launched
           ? navigation.navigate('MainScreen')
@@ -50,7 +55,9 @@ const LoginScreen = ({navigation}: any) => {
     setLoadingScreen(true)
     try {
       await auth().signInAnonymously()
-      await register({variables: {walletAddress: walletAddressInput}})
+      await register({
+        variables: {walletAddress: walletAddressInput.toLowerCase()},
+      })
       setLoadingScreen(false)
     } catch (e: any) {
       console.error(e)
@@ -61,12 +68,20 @@ const LoginScreen = ({navigation}: any) => {
   // validate wallet address when user write it
   React.useEffect(() => {
     if (!walletAddressInput) return
-    const regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g
-    walletAddressInput.length > 255 ||
-    !walletAddressInput.startsWith('0x') ||
-    regex.test(walletAddressInput)
-      ? setIncorrectWalletAddress(true)
-      : setIncorrectWalletAddress(false)
+    const correctWalletAddress =
+      walletAddressInput.length < 255 &&
+      walletAddressInput.startsWith('0x') &&
+      !walletAddressInput.includes('.')
+    const correctENS = walletAddressInput.endsWith('.eth')
+    setIncorrectWalletAddress(!(correctWalletAddress || correctENS))
+
+    // if input contains unsupported char -> return error and set incorrect wallet
+    try {
+      namehash.normalize(walletAddressInput)
+    } catch (e) {
+      console.log(e)
+      setIncorrectWalletAddress(true)
+    }
   }, [walletAddressInput])
 
   return (

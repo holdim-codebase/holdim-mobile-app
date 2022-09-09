@@ -58,6 +58,7 @@ export type TUser = {
   avatarUrl: string
   wallet: {
     address: string
+    ens: string
     tokens: [
       {
         personalizedData: {
