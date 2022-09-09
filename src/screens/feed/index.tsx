@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   TouchableWithoutFeedback,
+  NativeScrollEvent,
 } from 'react-native'
 import numeral from 'numeral'
 import moment from 'moment'
@@ -26,31 +27,41 @@ function FeedScreen({navigation}: any) {
   const [refreshing, setRefreshing] = React.useState(false)
   const [proposals, setProposals] = React.useState<TProposal[]>([])
   const [polls, setPolls] = React.useState<TPoll[]>([])
+
+  // states for pagination
+  const [endCursor, setEndCursor] = React.useState<string>('')
+  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false)
+
   const dateNow = new Date()
 
-  const {loading: loadingProposals, refetch: refetchGetProposals} = useQuery(
-    GET_PROPOSALS,
-    {
-      fetchPolicy: 'cache-and-network',
-      variables: {onlyFollowedDaos: true},
-      onCompleted: res => {
-        setProposals(res.proposals)
-        setRefreshing(false)
-      },
-      onError: error => {
-        console.log(error)
-        handleHTTPError()
-      },
-    },
-  )
-
-  const {loading: loadingPoll} = useQuery(GET_POLL, {
-    variables: {onlyFollowedDaos: true},
+  const {
+    loading: loadingProposals,
+    fetchMore: fetchMoreProposals,
+    refetch: refetchGetProposals,
+  } = useQuery(GET_PROPOSALS, {
+    fetchPolicy: 'cache-and-network',
+    variables: {first: 5, after: '', onlyFollowedDaos: true},
     onCompleted: res => {
-      setPolls(res.proposals)
+      setProposals(res.proposalsV2.edges.map((edge: {node: any}) => edge.node))
+      setEndCursor(res.proposalsV2.pageInfo.endCursor)
+      setHasNextPage(res.proposalsV2.pageInfo.hasNextPage)
+      setRefreshing(false)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
+      handleHTTPError()
+    },
+  })
+
+  // fetch poll separately from proposals
+  // because can get more time due to getting data from another server
+  const {loading: loadingPoll, fetchMore: fetchMorePoll} = useQuery(GET_POLL, {
+    variables: {first: 5, after: '', onlyFollowedDaos: true},
+    onCompleted: res => {
+      setPolls(res.proposalsV2.edges.map((edge: {node: any}) => edge.node))
+    },
+    onError: error => {
+      console.error(error)
       handleHTTPError()
     },
   })
@@ -61,11 +72,23 @@ function FeedScreen({navigation}: any) {
 
   const onRefresh = () => {
     setRefreshing(true)
-    refetchGetProposals()
+    refetchGetProposals({first: 5, after: '', onlyFollowedDaos: true})
   }
 
   const openDAODescription = (daoId: string) => {
     navigation.navigate('DAO', {daoId})
+  }
+
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }: NativeScrollEvent) => {
+    const paddingToBottom = 500
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    )
   }
 
   return (
@@ -80,11 +103,24 @@ function FeedScreen({navigation}: any) {
           colors={['#8463DF']}
           progressBackgroundColor={'white'}
         />
-      }>
+      }
+      onScroll={({nativeEvent}) => {
+        if (isCloseToBottom(nativeEvent)) {
+          if (hasNextPage) {
+            fetchMoreProposals({
+              variables: {first: 5, after: endCursor, onlyFollowedDaos: true},
+            })
+            fetchMorePoll({
+              variables: {first: 5, after: endCursor, onlyFollowedDaos: true},
+            })
+          }
+        }
+      }}
+      scrollEventThrottle={400}>
       {loadingProposals || refreshing
         ? null
         : proposals &&
-          proposals.map((item, i) => {
+          proposals.map((item: TProposal, i: number) => {
             const poll = polls[i]
             return (
               <TouchableWithoutFeedback
@@ -132,7 +168,6 @@ function FeedScreen({navigation}: any) {
                               <View
                                 key={i}
                                 style={styles.proposalVotingItemWrapper}>
-
                                 <View
                                   style={styles.proposalVotingItemTextWrapper}>
                                   <Text style={styles.proposalVotingItemText}>

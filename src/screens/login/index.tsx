@@ -40,7 +40,7 @@ const LoginScreen = ({navigation}: any) => {
       setLoadingScreen(loading)
     },
     onError: error => {
-      console.log(error)
+      console.error(error)
       setLoadingScreen(loading)
       handleHTTPError()
       onChangeWalletAddressInput('')
