@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   welcomeBtnContinueWrapper: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingBottom: normalize(75),
+    paddingBottom: normalize(45),
     paddingHorizontal: normalize(16),
   },
   welcomeBtnContinue: {

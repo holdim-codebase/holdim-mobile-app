@@ -25,23 +25,28 @@ const LoginScreen = ({navigation}: any) => {
     React.useState<boolean>(false)
   const [loadingScreen, setLoadingScreen] = React.useState<boolean>(false)
 
-  const [register, {loading}] = useMutation(REGISTER_USER, {
+  const [register] = useMutation(REGISTER_USER, {
     variables: {
       walletAddress: walletAddressInput,
     },
     onCompleted: data => {
       data.registerUser.wallets.length !== 0 &&
         AsyncStorage.setItem('wallet-id', data.registerUser.wallets[0].id)
-      AsyncStorage.getItem('alreadyLaunched').then(launched =>
-        launched
-          ? navigation.navigate('MainScreen')
-          : navigation.navigate('WelcomeScreen'),
-      )
-      setLoadingScreen(loading)
+      // navigate to screens depends on already launched
+      AsyncStorage.getItem('alreadyLaunched').then(launched => {
+        if (launched !== null) {
+          navigation.navigate('MainScreen')
+        } else {
+          AsyncStorage.setItem('alreadyLaunched', 'true')
+          navigation.navigate('WelcomeScreen')
+        }
+      })
+      AsyncStorage.setItem('userLoggedIn', 'true')
+      setLoadingScreen(true)
     },
     onError: error => {
       console.error(error)
-      setLoadingScreen(loading)
+      setLoadingScreen(false)
       handleHTTPError()
       onChangeWalletAddressInput('')
     },
@@ -54,11 +59,13 @@ const LoginScreen = ({navigation}: any) => {
     }
     setLoadingScreen(true)
     try {
-      await auth().signInAnonymously()
-      await register({
-        variables: {walletAddress: walletAddressInput.toLowerCase()},
-      })
-      setLoadingScreen(false)
+      await auth()
+        .signInAnonymously()
+        .then(r => {
+          register({
+            variables: {walletAddress: walletAddressInput.toLowerCase()},
+          })
+        })
     } catch (e: any) {
       console.error(e)
       setLoadingScreen(false)
