@@ -216,8 +216,12 @@ export default function App() {
   React.useEffect(() => {
     // check if the application has already been launched
     AsyncStorage.getItem('alreadyLaunched').then(value => {
-      if (value == null) {
-        AsyncStorage.setItem('alreadyLaunched', 'true')
+      if (value === null) {
+        // check if user exists when app is not launched yet
+        // sign out old user
+        if (auth().currentUser) {
+          auth().signOut()
+        }
         setIsFirstLaunch(true)
       } else {
         setIsFirstLaunch(false)
@@ -225,10 +229,16 @@ export default function App() {
     })
   }, [])
 
-  // check if user id already exists
+  // check if user was already logged in
   React.useEffect(() => {
-    auth().currentUser ? setAlreadyLoggedIn(true) : setAlreadyLoggedIn(false)
-  }, [auth().currentUser])
+    AsyncStorage.getItem('userLoggedIn').then(value => {
+      if (value === null) {
+        setAlreadyLoggedIn(false)
+      } else {
+        setAlreadyLoggedIn(true)
+      }
+    })
+  }, [])
 
   // hide splash screen
   React.useEffect(() => {
