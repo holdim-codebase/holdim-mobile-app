@@ -232,11 +232,7 @@ export default function App() {
   // check if user was already logged in
   React.useEffect(() => {
     AsyncStorage.getItem('userLoggedIn').then(value => {
-      if (value === null) {
-        setAlreadyLoggedIn(false)
-      } else {
-        setAlreadyLoggedIn(true)
-      }
+      setAlreadyLoggedIn(!!value)
     })
   }, [])
 
