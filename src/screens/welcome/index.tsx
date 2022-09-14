@@ -42,7 +42,7 @@ const WelcomeScreen = ({navigation}: any) => {
       onlyMain: true,
     },
     onCompleted: res => {
-      filterAllDaos(res.daos)
+      filterAllDaos(res.daosV2.edges.map((edge: {node: any}) => edge.node))
     },
     onError: error => {
       console.error(error)

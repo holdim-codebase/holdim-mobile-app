@@ -40,7 +40,7 @@ function FeedScreen({navigation}: any) {
     refetch: refetchGetProposals,
   } = useQuery(GET_PROPOSALS, {
     fetchPolicy: 'cache-and-network',
-    variables: {first: 5, after: '', onlyFollowedDaos: true},
+    variables: {first: 8, after: '', onlyFollowedDaos: true},
     onCompleted: res => {
       setProposals(res.proposalsV2.edges.map((edge: {node: any}) => edge.node))
       setEndCursor(res.proposalsV2.pageInfo.endCursor)
@@ -56,7 +56,7 @@ function FeedScreen({navigation}: any) {
   // fetch poll separately from proposals
   // because can get more time due to getting data from another server
   const {loading: loadingPoll, fetchMore: fetchMorePoll} = useQuery(GET_POLL, {
-    variables: {first: 5, after: '', onlyFollowedDaos: true},
+    variables: {first: 8, after: '', onlyFollowedDaos: true},
     onCompleted: res => {
       setPolls(res.proposalsV2.edges.map((edge: {node: any}) => edge.node))
     },
@@ -72,7 +72,7 @@ function FeedScreen({navigation}: any) {
 
   const onRefresh = () => {
     setRefreshing(true)
-    refetchGetProposals({first: 5, after: '', onlyFollowedDaos: true})
+    refetchGetProposals({first: 8, after: '', onlyFollowedDaos: true})
   }
 
   const openDAODescription = (daoId: string) => {
@@ -84,7 +84,7 @@ function FeedScreen({navigation}: any) {
     contentOffset,
     contentSize,
   }: NativeScrollEvent) => {
-    const paddingToBottom = 500
+    const paddingToBottom = 900
     return (
       layoutMeasurement.height + contentOffset.y >=
       contentSize.height - paddingToBottom
@@ -108,10 +108,10 @@ function FeedScreen({navigation}: any) {
         if (isCloseToBottom(nativeEvent)) {
           if (hasNextPage) {
             fetchMoreProposals({
-              variables: {first: 5, after: endCursor, onlyFollowedDaos: true},
+              variables: {first: 8, after: endCursor, onlyFollowedDaos: true},
             })
             fetchMorePoll({
-              variables: {first: 5, after: endCursor, onlyFollowedDaos: true},
+              variables: {first: 8, after: endCursor, onlyFollowedDaos: true},
             })
           }
         }
