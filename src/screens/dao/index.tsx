@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import {useLazyQuery, useQuery} from '@apollo/client'
 import moment from 'moment'
+import * as Sentry from '@sentry/react-native'
 
 import {TDAO, TProposal} from '../../types'
 import {
@@ -58,7 +59,7 @@ function DAOScreen({route, navigation}: any) {
       setDao(res.daosV2.edges[0].node)
     },
     onError: error => {
-      console.error(error)
+      Sentry.captureException(error)
       handleHTTPError()
     },
   })
@@ -73,7 +74,7 @@ function DAOScreen({route, navigation}: any) {
       setHasNextPage(res.proposalsV2.pageInfo.hasNextPage)
     },
     onError: error => {
-      console.error(error)
+      Sentry.captureException(error)
       handleHTTPError()
     },
   })

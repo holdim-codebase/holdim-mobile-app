@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from 'react-native'
-import numeral from 'numeral'
 import {useQuery} from '@apollo/client'
+import * as Sentry from '@sentry/react-native'
 
 import {TUser} from '../../types'
 import {GET_USER_INFO, handleHTTPError} from '../../services/api'
@@ -28,7 +28,7 @@ function ProfileScreen({navigation}: any) {
       setRefreshing(false)
     },
     onError: error => {
-      console.error(error)
+      Sentry.captureException(error)
       handleHTTPError()
     },
   })

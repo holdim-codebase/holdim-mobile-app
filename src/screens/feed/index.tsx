@@ -12,6 +12,7 @@ import {
 import numeral from 'numeral'
 import moment from 'moment'
 import {useQuery} from '@apollo/client'
+import * as Sentry from '@sentry/react-native'
 
 import {TProposal, TPoll} from '../../types'
 import {GET_POLL, GET_PROPOSALS, handleHTTPError} from '../../services/api'
@@ -48,7 +49,8 @@ function FeedScreen({navigation}: any) {
       setRefreshing(false)
     },
     onError: error => {
-      console.error(error)
+      // Sentry.captureException(error)
+      Sentry.captureException(error)
       handleHTTPError()
     },
   })
@@ -61,7 +63,8 @@ function FeedScreen({navigation}: any) {
       setPolls(res.proposalsV2.edges.map((edge: {node: any}) => edge.node))
     },
     onError: error => {
-      console.error(error)
+      // Sentry.captureException(error)
+      Sentry.captureException(error)
       handleHTTPError()
     },
   })

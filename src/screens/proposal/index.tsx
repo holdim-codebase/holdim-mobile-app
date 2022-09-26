@@ -11,6 +11,7 @@ import {
 import moment from 'moment'
 import numeral from 'numeral'
 import {useLazyQuery} from '@apollo/client'
+import * as Sentry from '@sentry/react-native'
 
 import {TPoll, TProposal} from '../../types'
 import {GET_POLL, handleHTTPError} from '../../services/api'
@@ -40,7 +41,7 @@ function ProposalScreen({route, navigation}: any) {
       setPoll(res.proposalsV2.edges[0].node)
     },
     onError: error => {
-      console.error(error)
+      Sentry.captureException(error)
       handleHTTPError()
     },
   })
