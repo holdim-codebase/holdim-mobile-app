@@ -3,7 +3,7 @@ import normalize from 'react-native-normalize'
 
 export const markDownStyles = StyleSheet.create({
   body: {
-    color: '#E2E2E2',
+    color: '#D7D7D7',
     fontSize: normalize(16),
     fontWeight: '400',
     lineHeight: normalize(22),
@@ -13,12 +13,15 @@ export const markDownStyles = StyleSheet.create({
     fontSize: normalize(16),
   },
   heading1: {
+    color: '#FFFFFF',
     fontWeight: '700',
   },
   heading2: {
+    color: '#FFFFFF',
     fontWeight: '700',
   },
   heading3: {
+    color: '#FFFFFF',
     fontWeight: '700',
   },
   bullet_list: {paddingBottom: normalize(16)},

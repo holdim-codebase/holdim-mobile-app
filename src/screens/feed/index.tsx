@@ -12,10 +12,12 @@ import {
 import numeral from 'numeral'
 import moment from 'moment'
 import {useQuery} from '@apollo/client'
+import messaging from '@react-native-firebase/messaging'
 
 import {TProposal, TPoll} from '../../types'
 import {GET_POLL, GET_PROPOSALS, handleHTTPError} from '../../services/api'
 import styles from './styles'
+import {requestUserNotificationPermission} from '../../services/firebase'
 
 export const convertURIForLogo = (logoURI: string) => {
   return logoURI.startsWith('ipfs://')
@@ -90,6 +92,14 @@ function FeedScreen({navigation}: any) {
       contentSize.height - paddingToBottom
     )
   }
+
+  // IOS
+  // Request user permission for notification
+  React.useEffect(() => {
+    messaging.AuthorizationStatus.NOT_DETERMINED === -1
+      ? requestUserNotificationPermission()
+      : null
+  }, [])
 
   return (
     <ScrollView
