@@ -1,6 +1,7 @@
 import React from 'react'
 import {useMutation} from '@apollo/client'
 import {TouchableOpacity} from 'react-native'
+import * as Sentry from '@sentry/react-native'
 
 import {
   FOLLOW_DAO,
@@ -27,7 +28,7 @@ const Follow = ({daoId, userFollowed, color}: FollowProps) => {
       setFollowed(true)
     },
     onError: error => {
-      console.error(error)
+      Sentry.captureException(error)
       handleHTTPError()
     },
     refetchQueries: [
@@ -49,7 +50,7 @@ const Follow = ({daoId, userFollowed, color}: FollowProps) => {
       setFollowed(false)
     },
     onError: error => {
-      console.error(error)
+      Sentry.captureException(error)
       handleHTTPError()
     },
     refetchQueries: [

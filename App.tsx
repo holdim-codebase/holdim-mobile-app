@@ -8,6 +8,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import auth from '@react-native-firebase/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {ApolloProvider} from '@apollo/client'
+import * as Sentry from '@sentry/react-native'
 
 import ProposalScreen from './src/screens/proposal'
 import FeedScreen from './src/screens/feed'
@@ -27,6 +28,15 @@ import FeedIconFocused from './src/assets/images/svg/Home.purple.svg'
 import SearchIconFocused from './src/assets/images/svg/Search.purple.svg'
 import ProfileIconFocused from './src/assets/images/svg/Profile.purple.svg'
 import WelcomeScreen from './src/screens/welcome'
+
+Sentry.init({
+  dsn: 'https://e64a26481fc64b0b895da8a145307e31@o1405388.ingest.sentry.io/6739145',
+  // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+  tracesSampleRate: 1.0,
+  release: 'holdim@1.0.0',
+  enableAutoSessionTracking: true,
+  sessionTrackingIntervalMillis: 10000,
+})
 
 const tabIconSizeMultiplier = 0.9
 
@@ -200,7 +210,7 @@ const MainScreen = () => {
   )
 }
 
-export default function App() {
+function App() {
   const [isFirstLaunch, setIsFirstLaunch] = React.useState<boolean>(false)
   const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState<boolean>(false)
 
@@ -278,3 +288,5 @@ export default function App() {
     </ApolloProvider>
   )
 }
+
+export default Sentry.wrap(App)

@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import auth from '@react-native-firebase/auth'
 import {useMutation} from '@apollo/client'
+import * as Sentry from '@sentry/react-native'
 
 import {handleHTTPError, REGISTER_USER} from '../../services/api'
 import styles from './styles'
@@ -45,7 +46,7 @@ const LoginScreen = ({navigation}: any) => {
       setLoadingScreen(true)
     },
     onError: error => {
-      console.error(error)
+      Sentry.captureException(error)
       setLoadingScreen(false)
       handleHTTPError()
       onChangeWalletAddressInput('')
@@ -66,8 +67,8 @@ const LoginScreen = ({navigation}: any) => {
             variables: {walletAddress: walletAddressInput.toLowerCase()},
           })
         })
-    } catch (e: any) {
-      console.error(e)
+    } catch (error: any) {
+      Sentry.captureException(error)
       setLoadingScreen(false)
     }
   }
@@ -86,7 +87,7 @@ const LoginScreen = ({navigation}: any) => {
     try {
       namehash.normalize(walletAddressInput)
     } catch (e) {
-      console.log(e)
+      console.error(e)
       setIncorrectWalletAddress(true)
     }
   }, [walletAddressInput])

@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native'
 import {useQuery} from '@apollo/client'
+import * as Sentry from '@sentry/react-native'
 
 import {GET_DAO_LIST, handleHTTPError} from '../../services/api'
 import {TDAO} from '../../types'
@@ -45,7 +46,7 @@ const WelcomeScreen = ({navigation}: any) => {
       filterAllDaos(res.daosV2.edges.map((edge: {node: any}) => edge.node))
     },
     onError: error => {
-      console.error(error)
+      Sentry.captureException(error)
       handleHTTPError()
     },
   })
