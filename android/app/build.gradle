@@ -325,8 +325,6 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-
-    compile "org.codehaus.groovy:groovy-dateutil:3.0.4"
 }
 
 if (isNewArchitectureEnabled()) {
