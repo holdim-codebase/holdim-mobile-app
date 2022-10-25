@@ -133,7 +133,7 @@ def reactNativeArchitectures() {
 }
 
 def getGoogleVersion() {
-    return (new Date().format('yyyyMMddHHmmss')).toInteger()
+    return new Date().format('yyyyMMddHHmmss') as int
 }
 
 def getNpmVersion() {
