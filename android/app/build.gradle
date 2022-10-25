@@ -133,7 +133,7 @@ def reactNativeArchitectures() {
 }
 
 def getGoogleVersion() {
-    return new Date().format('yyyyMMddHHmmss') as int
+    return new Date().format('yyyyMMddHHmm')
 }
 
 def getNpmVersion() {
@@ -142,7 +142,7 @@ def getNpmVersion() {
     return packageJson["version"]
 }
 
-def googleVer = getGoogleVersion()
+def googleVer = getGoogleVersion() as Integer
 def userVer = getNpmVersion()
 
 android {
@@ -325,8 +325,6 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-
-    runtime 'org.codehaus.groovy:groovy-dateutil'
 }
 
 if (isNewArchitectureEnabled()) {
