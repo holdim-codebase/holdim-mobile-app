@@ -5,6 +5,8 @@ import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
 import groovy.json.JsonSlurper
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
@@ -132,9 +134,11 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
-// def getGoogleVersion() {
-//     return new Date().format('yyyyMMddHHmmss')
-// }
+def getGoogleVersion() {
+    DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss")
+
+    return df.format(new Date())
+}
 
 def getNpmVersion() {
     def inputFile = new File("$rootDir/../package.json")
@@ -142,7 +146,7 @@ def getNpmVersion() {
     return packageJson["version"]
 }
 
-// def googleVer = getGoogleVersion()
+def googleVer = getGoogleVersion()
 def userVer = getNpmVersion()
 
 android {
@@ -154,7 +158,7 @@ android {
         applicationId "com.holdim"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6
+        versionCode googleVer
         versionName userVer
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
