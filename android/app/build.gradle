@@ -132,17 +132,13 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
-def getGoogleVersion() {
-    return new Date().format('yyyyMMddHHmm')
-}
-
 def getNpmVersion() {
     def inputFile = new File("$rootDir/../package.json")
     def packageJson = new JsonSlurper().parseText(inputFile.text)
     return packageJson["version"]
 }
 
-def googleVer = getGoogleVersion() as Integer
+def googleVer = (int) (((new Date().getTime() / 1000) - 1666666666) / 10)
 def userVer = getNpmVersion()
 
 android {
