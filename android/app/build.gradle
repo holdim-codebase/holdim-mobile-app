@@ -325,6 +325,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    runtime 'org.codehaus.groovy:groovy-dateutil'
 }
 
 if (isNewArchitectureEnabled()) {
