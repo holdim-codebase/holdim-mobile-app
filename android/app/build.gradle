@@ -5,8 +5,6 @@ import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
 import groovy.json.JsonSlurper
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
@@ -135,9 +133,7 @@ def reactNativeArchitectures() {
 }
 
 def getGoogleVersion() {
-    DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss")
-
-    return df.format(new Date())
+    return new Date().format('yyyyMMddHHmmss')
 }
 
 def getNpmVersion() {
@@ -329,6 +325,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    compile "org.codehaus.groovy:groovy-dateutil:3.0.4"
 }
 
 if (isNewArchitectureEnabled()) {
