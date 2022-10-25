@@ -132,18 +132,18 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
-def getDate() {
+def getGoogleVersion() {
     return new Date().format('yyyyMMddHHmmss')
 }
 
-def getNpmVersion() {
-    def inputFile = new File("../package.json")
-    def packageJson = new JsonSlurper().parseText(inputFile.text)
-    return packageJson["version"]
-}
+// def getNpmVersion() {
+//     def inputFile = new File("$rootDir/../package.json")
+//     def packageJson = new JsonSlurper().parseText(inputFile.text)
+//     return packageJson["version"]
+// }
 
-def googleVer = getDate()
-def userVer = getNpmVersion()
+def googleVer = getGoogleVersion()
+// def userVer = getNpmVersion()
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -155,7 +155,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode googleVer
-        versionName userVer
+        versionName "1.0"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
