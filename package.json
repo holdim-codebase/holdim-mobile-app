@@ -20,6 +20,7 @@
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
+    "@sentry/react-native": "^4.4.0",
     "@types/numeral": "^2.0.2",
     "graphql": "^16.5.0",
     "moment": "^2.29.3",

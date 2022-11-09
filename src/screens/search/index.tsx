@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import {useQuery} from '@apollo/client'
 import SearchBar from 'react-native-dynamic-search-bar'
+import * as Sentry from '@sentry/react-native'
 
 import {TDAO} from '../../types'
 import {GET_DAO_LIST, handleHTTPError} from '../../services/api'
@@ -38,7 +39,7 @@ function SearchScreen({navigation}: any) {
       setHasNextPage(res.daosV2.pageInfo.hasNextPage)
     },
     onError: error => {
-      console.error(error)
+      Sentry.captureException(error)
       handleHTTPError()
     },
   })
