@@ -1,6 +1,12 @@
 import {Alert} from 'react-native'
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
-import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client'
+import {
+  ApolloClient,
+  ApolloLink,
+  createHttpLink,
+  gql,
+  InMemoryCache,
+} from '@apollo/client'
 import {setContext} from '@apollo/client/link/context'
 import {relayStylePagination} from '@apollo/client/utilities'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -52,7 +58,12 @@ const authLink = setContext(async (_, {headers}) => {
 })
 
 export const client = new ApolloClient({
-  link: authLink.concat(baseHttpLink),
+  // link: authLink.concat(baseHttpLink),
+  link: ApolloLink.split(
+    operation => operation.getContext().clientName === 'snapshot',
+    snapshotLink,
+    baseHttpLink,
+  ),
   cache,
 })
 

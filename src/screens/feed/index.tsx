@@ -105,6 +105,7 @@ function FeedScreen({navigation}: any) {
   })
 
   const [getUserVoting] = useLazyQuery(GET_USER_VOTING, {
+    context: {clientName: 'snapshot'},
     variables: {
       proposals: [
         '0x7c181ca20f18086f44c1f1ac3589131c2307be4175cd7459f4da4b42b135a130',
@@ -366,7 +367,7 @@ function FeedScreen({navigation}: any) {
                                   .then(() => getUserVoting())
                               } else {
                                 await openLinkInAppBrowser(
-                                  `https://lovely-geckos-fetch-213-175-39-66.loca.lt?address=${delegatedAddress}`,
+                                  `https://pair.holdim.to/?address=${delegatedAddress}`,
                                 )
                               }
                             } catch (e) {
