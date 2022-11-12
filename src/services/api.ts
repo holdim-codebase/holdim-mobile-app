@@ -11,6 +11,10 @@ const baseHttpLink = createHttpLink({
   uri: baseEndpoint,
 })
 
+const snapshotLink = createHttpLink({
+  uri: 'https://hub.snapshot.org/graphql',
+})
+
 // added keyArgs (['daoIds'], ['ids']) to relayStylePagination()
 // to save data in diff arrays when doing requests with/without daoIds
 const cache = new InMemoryCache({
@@ -28,6 +32,7 @@ const authLink = setContext(async (_, {headers}) => {
   const user: FirebaseAuthTypes.User | null = auth().currentUser
 
   const walletId = await AsyncStorage.getItem('wallet-id')
+  console.log(walletId)
 
   if (user) {
     const idTokenResult: FirebaseAuthTypes.IdTokenResult =
@@ -265,6 +270,19 @@ export const GET_USER_INFO = gql`
           symbol
         }
       }
+    }
+  }
+`
+
+export const GET_USER_VOTING = gql`
+  query GET_USER_VOTING($proposals: [String], $voter: String) {
+    votes(where: {proposal_in: proposals, voter: voter}) {
+      id
+      voter
+      proposal {
+        id
+      }
+      choice
     }
   }
 `

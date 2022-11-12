@@ -115,6 +115,44 @@ const styles = StyleSheet.create({
     zIndex: 2,
     backgroundColor: 'red',
   },
+  choiceButton: {
+    color: 'white',
+    width: normalize(298),
+    alignItems: 'center',
+    height: normalize(34),
+    justifyContent: 'center',
+    borderRadius: 5,
+    marginTop: normalize(11),
+    borderWidth: 1,
+    borderColor: 'rgba(161, 149, 194, 1)',
+    flexDirection: 'row',
+  },
+  selectedChoiceButton: {
+    borderColor: 'rgba(132, 99, 223, 1)',
+  },
+  voteButton: {
+    backgroundColor: 'rgba(132, 99, 223, 1)',
+    width: normalize(298),
+    alignItems: 'center',
+    height: normalize(34),
+    justifyContent: 'center',
+    borderRadius: 5,
+    marginTop: normalize(11),
+  },
+  voteButtonText: {
+    color: 'white',
+    fontSize: normalize(12),
+    fontWeight: '700',
+  },
+  voteButtonDisabled: {
+    backgroundColor: 'rgba(125, 125, 125, 1)',
+    width: normalize(298),
+    alignItems: 'center',
+    height: normalize(34),
+    justifyContent: 'center',
+    borderRadius: 5,
+    marginTop: normalize(11),
+  },
 })
 
 export default styles
