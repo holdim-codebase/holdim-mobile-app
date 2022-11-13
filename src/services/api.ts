@@ -62,7 +62,7 @@ export const client = new ApolloClient({
   link: ApolloLink.split(
     operation => operation.getContext().clientName === 'snapshot',
     snapshotLink,
-    baseHttpLink,
+    authLink.concat(baseHttpLink),
   ),
   cache,
 })
@@ -83,6 +83,7 @@ export const REGISTER_USER = gql`
       id
       wallets {
         id
+        address
       }
     }
   }
