@@ -12,6 +12,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@ensdomains/eth-ens-namehash": "^2.0.15",
+    "@ethersproject/shims": "^5.7.0",
     "@freakycoder/react-native-bounceable": "^0.2.5",
     "@react-native-async-storage/async-storage": "^1.17.6",
     "@react-native-firebase/app": "^15.4.0",
@@ -28,6 +29,7 @@
     "react": "17.0.2",
     "react-native": "0.68.1",
     "react-native-dynamic-search-bar": "^2.0.2",
+    "react-native-get-random-values": "^1.8.0",
     "react-native-inappbrowser-reborn": "^3.7.0",
     "react-native-markdown-display": "^7.0.0-alpha.2",
     "react-native-normalize": "^1.0.1",
@@ -36,7 +38,8 @@
     "react-native-spinkit": "^1.5.1",
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^12.3.0",
-    "react-native-svg-transformer": "^1.0.0"
+    "react-native-svg-transformer": "^1.0.0",
+    "wasa-sdk": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -31,8 +31,13 @@ const LoginScreen = ({navigation}: any) => {
       walletAddress: walletAddressInput,
     },
     onCompleted: data => {
-      data.registerUser.wallets.length !== 0 &&
+      if (data.registerUser.wallets.length !== 0) {
         AsyncStorage.setItem('wallet-id', data.registerUser.wallets[0].id)
+        AsyncStorage.setItem(
+          'userWalletAddress',
+          data.registerUser.wallets[0].address,
+        )
+      }
       // navigate to screens depends on already launched
       AsyncStorage.getItem('alreadyLaunched').then(launched => {
         if (launched !== null) {

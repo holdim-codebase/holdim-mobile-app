@@ -1,6 +1,12 @@
 import {Alert} from 'react-native'
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
-import {ApolloClient, createHttpLink, gql, InMemoryCache} from '@apollo/client'
+import {
+  ApolloClient,
+  ApolloLink,
+  createHttpLink,
+  gql,
+  InMemoryCache,
+} from '@apollo/client'
 import {setContext} from '@apollo/client/link/context'
 import {relayStylePagination} from '@apollo/client/utilities'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -9,6 +15,10 @@ import {baseEndpoint} from '../config'
 
 const baseHttpLink = createHttpLink({
   uri: baseEndpoint,
+})
+
+const snapshotLink = createHttpLink({
+  uri: 'https://hub.snapshot.org/graphql',
 })
 
 // added keyArgs (['daoIds'], ['ids']) to relayStylePagination()
@@ -28,6 +38,7 @@ const authLink = setContext(async (_, {headers}) => {
   const user: FirebaseAuthTypes.User | null = auth().currentUser
 
   const walletId = await AsyncStorage.getItem('wallet-id')
+  console.log(walletId)
 
   if (user) {
     const idTokenResult: FirebaseAuthTypes.IdTokenResult =
@@ -47,7 +58,12 @@ const authLink = setContext(async (_, {headers}) => {
 })
 
 export const client = new ApolloClient({
-  link: authLink.concat(baseHttpLink),
+  // link: authLink.concat(baseHttpLink),
+  link: ApolloLink.split(
+    operation => operation.getContext().clientName === 'snapshot',
+    snapshotLink,
+    authLink.concat(baseHttpLink),
+  ),
   cache,
 })
 
@@ -67,6 +83,7 @@ export const REGISTER_USER = gql`
       id
       wallets {
         id
+        address
       }
     }
   }
@@ -265,6 +282,19 @@ export const GET_USER_INFO = gql`
           symbol
         }
       }
+    }
+  }
+`
+
+export const GET_USER_VOTING = gql`
+  query GET_USER_VOTING($proposals: [String], $voter: String) {
+    votes(where: {proposal_in: proposals, voter: voter}) {
+      id
+      voter
+      proposal {
+        id
+      }
+      choice
     }
   }
 `

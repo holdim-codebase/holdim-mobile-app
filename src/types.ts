@@ -89,3 +89,12 @@ export type TSlide = {
   title: string
   subtitle: string
 }
+
+export type TVoting = {
+  id: string
+  voter: string
+  proposal: {
+    id: string
+  }
+  choice: number
+}
